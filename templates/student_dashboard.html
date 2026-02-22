@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="heading">
+    <h2>Welcome, {{request.user.username}}</h2>
+    <a href="\accounts\logout">
+        <button>Logout</button>
+    </a>
+</section> <hr>
+<section class="featureSection">
+    <div>
+        <h2>Idea Submission and Approval</h2> <hr>
+        <p>Submit Three Ideas and Check The Project Approval Status.</p> <hr>
+        <a href="{% url 'submit_idea' %}">
+            <button>Go Ahed</button>
+        </a>
+    </div>
+    <div>
+        <h2>Idea Generation</h2> <hr>
+        <p>Use Our Generative AI Mentor To Explore Innovative Ideas.</p> <hr>
+        <a href="#">
+            <button>Go Ahed</button>
+        </a>
+    </div>
+    <div>
+        <h2>Upload Project</h2> <hr>
+        <p>Upload Your Project Once Completed.</p> <hr>
+        <a href="#">
+            <button>Go Ahed</button>
+        </a>
+    </div>
+</section>
+<section class="featureSection">
+    <div>
+        <h2>Notice Board</h2> <hr>
+        <p>Don't Miss Out The Important Messages From Your Guide.</p> <hr>
+        <a href="#">
+            <button>Go Ahed</button>
+        </a>
+    </div>
+    <div>
+        <h2>SDLC</h2> <hr>
+        <p>Detailed Documentation Of Software Development Life Cycle, Check This Out and Accelerate Your Development 
+            Pace While Continuously Learning.
+        </p> <hr>
+        <a href="#">
+            <button>Go Ahed</button>
+        </a>
+    </div>
+</section>
+
+
+{% endblock %}

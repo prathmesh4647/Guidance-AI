@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Idea Submission Limit Reached</h2>
+
+<p>You have already submitted 3 ideas.</p>
+<p>Please wait for faculty approval.</p>
+
+<a href="{% url 'student_dashboard' %}">
+    <button>Back to Dashboard</button>
+</a>
+
+{% endblock %}

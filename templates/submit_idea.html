@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Submit Your Project Idea</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Idea Title:</label><br>
+    <input type="text" name="title" required><br><br>
+
+    <label>Description:</label><br>
+    <input type="text" name="description" ><br><br>
+
+    <label>Abstract:</label><br>
+    <textarea name="abstract" rows="5" required></textarea><br><br>
+
+    <label>Upload PPT (Optional):</label><br>
+    <input type="file" name="ppt"><br><br>
+
+    <button type="submit">Submit Idea</button>
+
+</form>
+
+{% endblock %}

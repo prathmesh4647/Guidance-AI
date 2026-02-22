@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Project Showcase {% endblock %} 
+
+{% block content %}
+
+{% for project in projects %}
+<section class="showcase_firstSection">
+  <div class="left">
+    <h3>{{project.team_name}}</h3>
+    <hr>
+    <h2>{{project.title}}</h2>
+    <h6>{{project.description}}</h6>
+    <hr>
+    <h5>{{project.team_member1}}</h5>
+    <h5>{{project.team_member2}}</h5>
+    <h5>{{project.team_member3}}</h5>
+    <h5>{{project.team_member4}}</h5>
+    <hr>
+    <a href="{% url 'project_detail' project.id %}">
+      <button>View Details </button>
+    </a>
+  </div>
+</section>
+{% endfor %}
+{% endblock %}
+
+
+
+
