@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Faculty Plagiarism Dashboard</h2>
+<hr>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Team</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Similarity %</th>
+        <th>Risk</th>
+        <th>Action</th>
+    </tr>
+
+    {% for idea in ideas %}
+    <tr>
+        <td>{{ idea.team.name }}</td>
+        <td>{{ idea.title }}</td>
+        <td>{{ idea.status }}</td>
+        <td>{{ idea.similarity_score|floatformat:2|add:"0"|floatformat:2 }}</td>
+
+        <td>
+            {% if idea.similarity_score > 0.75 %}
+                <span style="color:red;">High 🚨</span>
+            {% elif idea.similarity_score > 0.5 %}
+                <span style="color:orange;">Medium ⚠️</span>
+            {% else %}
+                <span style="color:green;">Low ✅</span>
+            {% endif %}
+        </td>
+
+        <td>
+            {% if idea.status == "pending" %}
+                <a href="#">Approve</a> |
+                <a href="#">Reject</a>
+            {% else %}
+                —
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
