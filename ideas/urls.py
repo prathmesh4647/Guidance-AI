@@ -1,6 +1,7 @@
 from django.urls import path
-from . import views
+from .views import submit_idea, faculty_ideas
 
 urlpatterns = [
-    path('submit/', views.submit_idea, name='submit_idea'),
+    path("submit/", submit_idea, name="submit_idea"),
+    path("faculty/", faculty_ideas, name="faculty_ideas"),
 ]

@@ -1,8 +1,46 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
 
-<h2>Faculty Dashboard</h2>
-<a href="\accounts\logout">Logout</a>
+<section class="heading">
+    <h2>Welcome, {{ request.user.username }}</h2>
+    <a href="{% url 'logout' %}">
+        <button>Logout</button>
+    </a>
+</section>
+
+<hr>
+
+<section class="featureSection">
+    <div>
+        <h2>Plagiarism Dashboard</h2>
+        <hr>
+        <p>Review student ideas and check similarity scores.</p>
+        <hr>
+        <a href="{% url 'faculty_ideas' %}">
+            <button>Open Dashboard</button>
+        </a>
+    </div>
+
+    <div>
+        <h2>Manage Teams</h2>
+        <hr>
+        <p>Create and manage student teams.</p>
+        <hr>
+        <a href="#">
+            <button>Go Ahead</button>
+        </a>
+    </div>
+
+    <div>
+        <h2>Notice Board</h2>
+        <hr>
+        <p>Post important announcements for your teams.</p>
+        <hr>
+        <a href="#">
+            <button>Go Ahead</button>
+        </a>
+    </div>
+</section>
 
 {% endblock %}

@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from pgvector.django import VectorField
 
 class Project(models.Model):
 
@@ -46,6 +47,10 @@ class Project(models.Model):
         default='pending'
     )
 
+    #Adding embeddings column having VectorField datatype  
+    embedding = VectorField(dimensions=384, null=True, blank=True)
+    similarity_score = models.FloatField(default=0.0)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     approved_at = models.DateTimeField(null=True, blank=True)
 
