@@ -9,7 +9,7 @@ def submit_idea(request):
     if request.user.role != 'student':
         return redirect('login')
     
-    # 🔥 Get student's team
+    # Get student's team
     team = request.user.student_teams.first()
 
     if not team:

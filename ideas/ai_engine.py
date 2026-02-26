@@ -16,8 +16,6 @@ def generate_embedding(text):
     return embedding.tolist()
 
 
-from django.db import connection
-
 def check_similarity(new_embedding):
     with connection.cursor() as cursor:
         cursor.execute("""
