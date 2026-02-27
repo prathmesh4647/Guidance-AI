@@ -1,0 +1,61 @@
+{% extends "base.html" %} {% block content %} {% if error %}
+<p style="color: red">{{ error }}</p>
+{% endif %}
+
+<h2>Manage Teams</h2>
+<hr />
+
+<h3>Create New Team</h3>
+
+<form method="POST">
+  {% csrf_token %}
+  <input type="text" name="team_name" placeholder="Team Name" required />
+  <button type="submit">Create Team</button>
+</form>
+
+<hr />
+
+<h3>Your Teams</h3>
+
+{% for team in teams %}
+
+<div>
+  <h4>{{ team.name }}</h4>
+
+  <a href="{% url 'edit_team' team.id %}">
+    <button>Edit</button>
+  </a>
+
+  <a href="{% url 'delete_team' team.id %}">
+    <button style="background: red; color: white">Delete Team</button>
+  </a>
+
+  <a href="{% url 'add_student' team.id %}">
+    <button>Add Student</button>
+  </a>
+
+  <p><strong>Members:</strong></p>
+
+  <ul>
+    {% for member in team.members.all %}
+    <li>
+      {{ member.first_name }} {{ member.last_name }}
+      <a href="{% url 'remove_student' team.id member.id %}">
+        <button>Remove</button>
+      </a>
+    </li>
+    {% empty %}
+    <li>No Members Added Yet</li>
+    {% endfor %}
+  </ul>
+</div>
+<hr />
+{% empty %}
+<p>You haven't created any teams yet.</p>
+{% endfor %}
+
+<a href="{% url 'faculty_dashboard' %}">
+  <button>Back to Dashboard</button>
+</a>
+
+{% endblock %}

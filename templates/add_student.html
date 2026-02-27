@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Add Student to {{ team.name }}</h2>
+<hr>
+
+{% if error %}
+<p style="color:red;">{{ error }}</p>
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <select name="student_id" required>
+        <option value="">Select Student</option>
+
+        {% for student in students %}
+            {% if not student.student_teams.exists %}
+                <option value="{{ student.id }}">
+                    {{ student.first_name }} {{ student.last_name }} ({{ student.username }})
+                </option>
+            {% endif %}
+        {% endfor %}
+    </select>
+
+    <button type="submit">Add Student</button>
+</form>
+
+<hr>
+
+<a href="{% url 'manage_teams' %}">
+    <button>Back</button>
+</a>
+
+{% endblock %}

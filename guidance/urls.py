@@ -31,6 +31,7 @@ urlpatterns = [
     path("about/", views.about),
     path("accounts/", include('accounts.urls')),
     path('ideas/', include('ideas.urls')),
+    path('teams/', include('teams.urls')),
 ]
 
 if settings.DEBUG:

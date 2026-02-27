@@ -9,7 +9,7 @@ def submit_idea(request):
     if request.user.role != 'student':
         return redirect('login')
     
-    # 🔥 Get student's team
+    # Get student's team
     team = request.user.student_teams.first()
 
     if not team:
@@ -17,11 +17,28 @@ def submit_idea(request):
             "message": "You are not assigned to any team."
         })
 
+    
+
+
+
+
+
+
+    # Loading Same error.html page 
+    if team.members.count() < 3:
+        return render(request, "error.html", {
+        "message": "Team must have minimum 3 students to submit idea."
+    })
+
+
     idea_count = Idea.objects.filter(team=team).count()
+
 
     if idea_count >= 3:
         return render(request, 'idea_limit.html')
     
+
+
     if request.method == "POST":
         title = request.POST.get("title")
         description = request.POST.get("description")
@@ -29,6 +46,7 @@ def submit_idea(request):
         ppt = request.FILES.get('ppt')
 
         team = request.user.student_teams.first()
+
 
         if not team:
             return render(request, "error.html", {
