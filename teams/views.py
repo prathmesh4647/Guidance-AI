@@ -90,9 +90,20 @@ def delete_team(request, team_id):
         return redirect('login')
 
     team = get_object_or_404(Team, id=team_id, guide=request.user)
-    team.delete()
 
-    return redirect('manage_teams')
+    # Prevent deletion if approved idea exists
+    if team.ideas.filter(status='approved').exists():
+        return render(request, "error.html", {
+            "message": "Cannot delete team with an approved idea."
+        })
+
+    if request.method == "POST":
+        team.delete()
+        return redirect('manage_teams')
+
+    return render(request, "confirm_delete_team.html", {
+        "team": team
+    })
 
 
 
