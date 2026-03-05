@@ -3,6 +3,10 @@ from django.contrib.auth.decorators import login_required
 from .models import Idea
 from .ai_engine import generate_embedding, check_similarity
 from teams.models import Team
+from .gemini_engine import generate_innovative_ideas
+from google import genai
+import os
+
 
 @login_required
 def submit_idea(request):
@@ -17,14 +21,7 @@ def submit_idea(request):
             "message": "You are not assigned to any team."
         })
 
-    
-
-
-
-
-
-
-    # Loading Same error.html page 
+ 
     if team.members.count() < 3:
         return render(request, "error.html", {
         "message": "Team must have minimum 3 students to submit idea."
@@ -95,5 +92,26 @@ def faculty_ideas(request):
     ideas = Idea.objects.filter(team__in=teams).order_by("-created_at")
 
     return render(request, "faculty_ideas.html", {
+        "ideas": ideas
+    })
+
+
+
+@login_required
+def idea_generator(request):
+
+    if request.user.role != "student":
+        return redirect("login")
+
+    ideas = None
+
+    if request.method == "POST":
+        domain = request.POST.get("domain")
+        industry = request.POST.get("industry")
+        problem = request.POST.get("problem")
+
+        ideas = generate_innovative_ideas(domain, industry, problem)
+
+    return render(request, "idea_generator.html", {
         "ideas": ideas
     })
