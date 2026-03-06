@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<section class="heading">
+<section class="dashboardSection1">
     <h2>
     Welcome, {{ request.user.first_name|capfirst }} {{ request.user.last_name|capfirst }}
     </h2>
@@ -13,7 +13,7 @@
 
 <hr>
 
-<section class="featureSection">
+<div class="dashboardSection2">
     <div>
         <h2>Idea Submission and Approval</h2>
         <hr>
@@ -23,7 +23,9 @@
             <button>Go Ahead</button>
         </a>
     </div>
+</div>
 
+<div class="dashboardSection2">
     <div>
         <h2>Idea Generation</h2>
         <hr>
@@ -33,7 +35,9 @@
             <button>Go Ahead</button>
         </a>
     </div>
+</div>
 
+<div class="dashboardSection2">
     <div>
         <h2>Upload Project</h2>
         <hr>
@@ -43,9 +47,10 @@
             <button>Go Ahead</button>
         </a>
     </div>
-</section>
+</div>
 
-<section class="featureSection">
+
+<div class="dashboardSection2">
     <div>
         <h2>Notice Board</h2>
         <hr>
@@ -55,7 +60,9 @@
             <button>Go Ahead</button>
         </a>
     </div>
+</div>
 
+<div class="dashboardSection2">
     <div>
         <h2>SDLC</h2>
         <hr>
@@ -68,6 +75,9 @@
             <button>Go Ahead</button>
         </a>
     </div>
-</section>
+</div>
+
+
+
 
 {% endblock %}

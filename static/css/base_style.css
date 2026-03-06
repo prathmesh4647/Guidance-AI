@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
 }
 body {
   text-align: center;
@@ -12,6 +13,7 @@ body {
   color: white;
   font-family: "Poppins", sans-serif;
   background-attachment: fixed;
+  scroll-behavior: smooth;
 }
 html {
   scroll-behavior: smooth;
@@ -481,16 +483,25 @@ nav ul li {
   border: 1px solid rgba(255, 255, 255, 0.3);
   z-index: 1000;
   padding: 10px;
+  justify-items: center;
+}
+
+.loginSection > div > .heading{
+  padding: 10px;
+  background: linear-gradient(135deg, #5b3df5, #9333ea);
+  width: 70%;
+  border-radius: 10px;
+  margin: 20px 0 20px 0;
 }
 
 .loginSection > div > h2{
   font-size: 1rem;
-  font-family: monospace;
   color: #f5e8c7;
 }
 
 .loginSection > div > form > button{
-  background-color: orange;
+  background: linear-gradient(135deg, #5b3df5, #9333ea);
+  color: white;
   height: 40px;
   width: 100px;
   border-radius: 10px;
@@ -501,6 +512,9 @@ nav ul li {
   height: 40px;
   width: 350px;
   border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
 }
 
 /* Registration Page */
@@ -509,23 +523,32 @@ nav ul li {
   justify-content: space-around;
   margin: 80px 0;
   text-align: center;
+
 }
 
 .registrationSection > div{
   width: 30%;
   height: 100%;
   background: rgba(255, 255, 255, 0.15); /* transparent */
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(90px);
   -webkit-backdrop-filter: blur(10px); /* Safari */
   border: 1px solid rgba(255, 255, 255, 0.3);
   z-index: 1000;
   padding: 10px;  
+  border-radius: 10px;
+  justify-items: center;
 }
 
-.registrationSection > div > h2{
+.registrationSection > div > .heading{
+  padding: 10px;
+  background: linear-gradient(135deg, #5b3df5, #9333ea);
+  width: 70%;
+  border-radius: 10px;
+  margin: 20px 0 20px 0;
+}
+
+.registrationSection > div > .heading > h2{
   font-size: 1rem;
-  font-family: monospace;
-  color: #f5e8c7;
 }
 
 .registrationSection > div > form > input{
@@ -533,52 +556,143 @@ nav ul li {
   height: 40px;
   width: 350px;
   border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
 }
 
 .registrationSection > div > form > button{
-  background-color: orange;
+  background: linear-gradient(135deg, #5b3df5, #9333ea);
   height: 40px;
-  width: 100px;
+  width: 50%;
   border-radius: 10px;
+  color: white;
 }
 
 
 /* Student Dashboard Section */
-.heading{
+.dashboardSection1{
   display: flex;
   justify-content: space-around;
   margin-top: 20px;
   text-align: center;
 }
-.heading > h2{
-  font-family: monospace;
+.dashboardSection1 > h2{
   font-size: 1.5rem;
 }
-.heading > a > button{
-  height: 29px;
-  width: 69px;
-  background-color: orange;
+.dashboardSection1 > a > button{
+  color: white;
+  height: 130%;
+  width: 250%;
+  background: linear-gradient(60deg, #eb160e, #a81aea);
   border-radius: 10px;
 }
-.featureSection{
+.dashboardSection2{
   display: flex;
   justify-content: space-around;
   margin-top: 20px;
   text-align: center;
 }
-.featureSection > div{
-  width: 30%;
+.dashboardSection2 > div{
+  width: 80%;
   height: 100%;
-  margin-top: 40px;
-  background: rgb(255, 255, 255); /* transparent */
-  color: black;
-  padding: 10px;
+  background: rgba(255, 255, 255, 0.15); /* transparent */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(10px); /* Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 1000;
+  padding: 10px;  
+  border-radius: 10px;
+  justify-items: center;
+  margin-top: 50px;
+}
+.dashboardSection2 > div > a > button{
+  background: linear-gradient(135deg, #5b3df5, #9333ea);
+  color: white;
+  height: 40px;
+  width: 30%;
   border-radius: 10px;
 }
-.featureSection > div > a > button{
-  background-color: rgb(64, 134, 247);
-  height: 35px;
-  width: 80px;
+
+/* manage_teams.html chi css */
+.manageteamFirstSection > h2{
+  font-size: 3rem;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  color: #F68048;
+
+}
+
+.manageteamSecondSection{
+  display: flex;
+  justify-content: space-around;
+  margin: 80px;
+  text-align: center;
+}
+
+.manageteamSecondSection > div{
+  width: 30%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15); /* transparent */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(10px); /* Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 10px;
-  border: 1px solid white;
+  z-index: 1000;
+  padding: 10px;  
+}
+.manageteamSecondSection > div > h3{
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-size: 1.2rem;
+  color: #EEEEEE;
+}
+.manageteamSecondSection > div > form > input{
+  width: 90%;
+  height: 50px;
+  font-family: monospace;
+  text-align: center;
+  margin: 5px;
+  border-radius: 10px;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.manageteamSecondSection > div > form > button{
+  width: 30%;
+  height: 40px;
+  border-radius: 10px;
+  margin: 5px;
+  background-color: #DFD0B8;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.manageteamThirdSection > h3{
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  margin: 5px;
+}
+
+.manageteamThirdSection{
+  display: flex;
+  justify-content: space-around;
+  margin: 80px 0;
+  text-align: center;
+}
+.manageteamThirdSection > div {
+  width: 30%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15); /* transparent */
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(10px); /* Safari */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  z-index: 1000;
+  padding: 10px;  
+}
+
+.manageteamThirdSection > div > h4{
+  color: #F68048;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.manageteamThirdSection  > div > .buttons > button{
+  width: 10%;
+  height: 10%;
 }
