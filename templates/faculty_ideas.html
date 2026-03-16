@@ -17,30 +17,46 @@
     {% for idea in ideas %}
     <tr>
         <td>{{ idea.team.name }}</td>
-        <td>{{ idea.title }}</td>
-        <td>{{ idea.status }}</td>
-        <td>{{ idea.similarity_score|floatformat:2|add:"0"|floatformat:2 }}</td>
 
         <td>
-            {% if idea.similarity_score > 0.75 %}
-                <span style="color:red;">High 🚨</span>
+            <b>{{ idea.title }}</b><br>
+            <small>{{ idea.description }}</small>
+        </td>
+
+        <td>{{ idea.status }}</td>
+
+        <td>
+            {{ idea.similarity_score|floatformat:2 }}
+        </td>
+
+        <td>
+            {% if idea.similarity_score > 0.8 %}
+                🔴 High
             {% elif idea.similarity_score > 0.5 %}
-                <span style="color:orange;">Medium ⚠️</span>
+                🟠 Medium
             {% else %}
-                <span style="color:green;">Low ✅</span>
+                🟢 Low
             {% endif %}
         </td>
 
         <td>
-            {% if idea.status == "pending" %}
-                <a href="#">Approve</a> |
-                <a href="#">Reject</a>
-            {% else %}
-                —
-            {% endif %}
+
+            <form method="POST" action="{% url 'approve_idea' idea.id %}" style="margin-bottom:5px;">
+                {% csrf_token %}
+                <textarea name="remarks" placeholder="Remarks" rows="2"></textarea><br>
+                <button type="submit">Approve</button>
+            </form>
+
+            <form method="POST" action="{% url 'reject_idea' idea.id %}">
+                {% csrf_token %}
+                <textarea name="remarks" placeholder="Remarks" rows="2"></textarea><br>
+                <button type="submit">Reject</button>
+            </form>
+
         </td>
     </tr>
     {% endfor %}
+
 </table>
 
 {% endblock %}

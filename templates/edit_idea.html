@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Edit & Resubmit Idea</h2>
+<hr>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Idea Title</label><br>
+    <input type="text" name="title" value="{{ idea.title }}" required><br><br>
+
+    <label>Description</label><br>
+    <input type="text" name="description" value="{{ idea.description }}"><br><br>
+
+    <label>Abstract</label><br>
+    <textarea name="abstract" rows="5" required>{{ idea.abstract }}</textarea><br><br>
+
+    <label>Upload Updated PPT (Optional)</label><br>
+    <input type="file" name="ppt"><br><br>
+
+    <button type="submit">Resubmit Idea</button>
+
+</form>
+
+<br>
+
+<a href="{% url 'student_ideas' %}">
+<button>Back to My Ideas</button>
+</a>
+
+{% endblock %}

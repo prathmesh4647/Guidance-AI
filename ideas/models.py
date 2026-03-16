@@ -23,11 +23,15 @@ class Idea(models.Model):
     plagiarism_score = models.FloatField(default=0.0)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     
+    #field for storing remarks if idea rejected
+    remarks = models.TextField(null=True, blank=True)
+
     #Adding embeddings column having VectorField datatype  
     embedding = VectorField(dimensions=384, null=True, blank=True)
     similarity_score = models.FloatField(default=0.0)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
 
     # Restrict max 3 ideas per team
     def clean(self):

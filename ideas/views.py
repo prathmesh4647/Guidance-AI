@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Idea
 from .ai_engine import generate_embedding, check_similarity
@@ -28,7 +28,9 @@ def submit_idea(request):
     })
 
 
-    idea_count = Idea.objects.filter(team=team).count()
+    idea_count = Idea.objects.filter(
+        team=team
+    ).exclude(status="rejected").count()
 
 
     if idea_count >= 3:
@@ -113,5 +115,128 @@ def idea_generator(request):
         ideas = generate_innovative_ideas(domain, industry, problem)
 
     return render(request, "idea_generator.html", {
+        "ideas": ideas
+    })
+
+
+#Functions for approving, rejecting and adding remarks
+@login_required
+def approve_idea(request, idea_id):
+
+    if request.user.role != 'faculty':
+        return redirect('login')
+
+    idea = get_object_or_404(Idea, id=idea_id)
+
+    existing = Idea.objects.filter(
+        team=idea.team,
+        status='approved'
+    ).exclude(id=idea.id)
+
+    if existing.exists():
+        return render(request, "error.html", {
+            "message": "This team already has an approved idea."
+        })
+
+    if request.method == "POST":
+        remarks = request.POST.get("remarks")
+
+        # Direct database update (skip validation)
+        Idea.objects.filter(id=idea.id).update(
+            status="approved",
+            remarks=remarks
+        )
+
+    return redirect("faculty_ideas")
+
+
+@login_required
+def reject_idea(request, idea_id):
+
+    if request.user.role != 'faculty':
+        return redirect('login')
+
+    idea = get_object_or_404(Idea, id=idea_id)
+
+    if request.method == "POST":
+        remarks = request.POST.get("remarks")
+
+        idea.status = "rejected"
+        idea.remarks = remarks
+
+        # save without triggering full_clean again
+        Idea.objects.filter(id=idea.id).update(
+            status="rejected",
+            remarks=remarks
+        )
+
+    return redirect("faculty_ideas")
+
+
+@login_required
+def my_ideas(request):
+
+    if request.user.role != "student":
+        return redirect("login")
+
+    team = request.user.student_teams.first()
+
+    ideas = Idea.objects.filter(team=team)
+
+    return render(request, "student_ideas.html", {
+        "ideas": ideas
+    })
+
+
+@login_required
+def edit_idea(request, idea_id):
+
+    idea = get_object_or_404(Idea, id=idea_id)
+
+    if request.user.role != "student":
+        return redirect("login")
+
+    if request.method == "POST":
+
+        idea.title = request.POST.get("title")
+        idea.description = request.POST.get("description")
+        idea.abstract = request.POST.get("abstract")
+
+        # regenerate embedding
+        text = f"{idea.title} {idea.abstract}"
+
+        embedding = generate_embedding(text)
+        similarity = check_similarity(embedding)
+
+        Idea.objects.filter(id=idea.id).update(
+            title=idea.title,
+            description=idea.description,
+            abstract=idea.abstract,
+            embedding=embedding,
+            similarity_score=similarity,
+            status="pending",
+            remarks=""
+        )
+
+        return redirect("my_ideas")
+
+    return render(request, "edit_idea.html", {"idea": idea})
+
+@login_required
+def student_ideas(request):
+
+    if request.user.role != "student":
+        return redirect("login")
+
+    team = request.user.student_teams.first()
+
+    if not team:
+        return render(request, "error.html", {
+            "message": "You are not assigned to any team."
+        })
+
+    ideas = Idea.objects.filter(team=team).order_by("-created_at")
+
+    return render(request, "student_ideas.html", {
         "ideas": ideas
     })
