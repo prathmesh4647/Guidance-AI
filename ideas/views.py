@@ -120,6 +120,8 @@ def idea_generator(request):
 
 
 #Functions for approving, rejecting and adding remarks
+from projects.models import Project
+
 @login_required
 def approve_idea(request, idea_id):
 
@@ -139,13 +141,22 @@ def approve_idea(request, idea_id):
         })
 
     if request.method == "POST":
+
         remarks = request.POST.get("remarks")
 
-        # Direct database update (skip validation)
+        # update idea
         Idea.objects.filter(id=idea.id).update(
             status="approved",
             remarks=remarks
         )
+
+        # create project automatically
+        if not hasattr(idea.team, "project"):
+            Project.objects.create(
+                team=idea.team,
+                final_idea=idea,
+                tech_stack="To be updated by student"
+            )
 
     return redirect("faculty_ideas")
 
