@@ -736,3 +736,75 @@ nav ul li {
   background-color: #eef2ff;
   transition: 0.3s;
 }
+
+/* Create Notices */
+.createNotice{
+  justify-items: center;
+}
+
+.createNotice > form {
+  width: 70%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  padding: 40px;
+  border-radius: 20px;
+  margin-bottom: 50px;
+}
+
+.createNotice > form > input{
+  text-align: center;
+  height: 40px;
+  width: 90%;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.createNotice > form > textarea{
+  text-align: center;
+  height: 100px;
+  width: 90%;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.createNotice > form > button{
+  display: inline-block;
+  padding: 14px 30px;
+  background: linear-gradient(135deg, #6d28d9, #9333ea);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+
+.createNotice > form > select{
+  text-align: center;
+  height: 240px;
+  width: 90%;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.createNotice >form > select > option{
+  width: 100%;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  margin-top: 10px;
+
+}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="facultyIdeasSection">
+<div class="facultyIdeasHeading">
+    <h2>Notices</h2>
+</div>
+</section>
+
+{% for notice in notices %}
+<div>
+    <h3>{{ notice.title }}</h3>
+    <p>{{ notice.message }}</p>
+    <small>{{ notice.created_at }}</small>
+    <small>
+        Posted by: {{ notice.created_by.first_name }} {{notice.created_by.last_name }}
+    </small><br>
+    <hr>
+</div>
+{% empty %}
+<p>No notices available</p>
+{% endfor %}
+
+{% endblock %}
