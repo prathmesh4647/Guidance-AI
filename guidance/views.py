@@ -11,4 +11,4 @@ def login(request):
     return render(request, 'base.html')
 
 def about(request):
-    return render(request, 'base.html')
+    return render(request, "about.html")

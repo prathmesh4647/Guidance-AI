@@ -28,7 +28,7 @@ urlpatterns = [
     path("home", views.home),
     path("board/", views.board),
     path("login/", views.login),
-    path("about/", views.about),
+    path('about/', views.about, name='about'),
     path("accounts/", include('accounts.urls')),
     path('ideas/', include('ideas.urls')),
     path('teams/', include('teams.urls')),

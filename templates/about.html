@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="
+    min-height: 100vh;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+">
+
+    <div style="max-width: 1200px; margin: auto;">
+
+        <header style="text-align: center; margin-bottom: 70px;">
+            <h1 style="
+                font-size: 48px;
+                font-weight: 800;
+                margin-bottom: 15px;
+                letter-spacing: -0.5px;
+            ">
+                About <span style="color:#ff00cc; text-shadow: 0 0 15px rgba(255,0,204,0.4);">Guidance.AI</span>
+            </h1>
+            <p style="
+                color: #a0aec0;
+                font-size: 18px;
+                max-width: 700px;
+                margin: 0 auto;
+            ">
+                A centralized, AI-powered project management and evaluation platform designed exclusively to modernize academic institutions.
+            </p>
+        </header>
+
+        <div style="
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+        ">
+            <h2 style="color:#00d4ff; margin-top: 0; font-size: 28px;">🎯 Our Mission</h2>
+            <p style="color: #e2e8f0; font-size: 16px;">
+                Traditional academic project workflows are often plagued by inefficiencies, from duplicate idea submissions to fragmented communication. Guidance.AI was built to bridge this gap. By integrating intelligent AI validation, structured collaboration, and centralized tracking, we empower students to focus on innovation while providing faculty with the tools they need for seamless evaluation and oversight.
+            </p>
+        </div>
+
+        <div style="
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        ">
+            <div style="
+                flex: 1;
+                min-width: 280px;
+                background: rgba(255,255,255,0.02);
+                border: 1px solid rgba(255,0,204,0.2);
+                padding: 30px;
+                border-radius: 16px;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 32px rgba(255,0,204,0.05);
+            ">
+                <h3 style="color:#ff00cc; margin-top: 0; font-size: 22px;">🛡️ AI-Powered Validation</h3>
+                <p style="color: #cbd5e1; font-size: 15px; margin-bottom: 0;">
+                    Say goodbye to redundant projects. Our system utilizes advanced embedding technologies to detect plagiarism and flag duplicate idea submissions instantly, ensuring academic integrity.
+                </p>
+            </div>
+
+            <div style="
+                flex: 1;
+                min-width: 280px;
+                background: rgba(255,255,255,0.02);
+                border: 1px solid rgba(0,212,255,0.2);
+                padding: 30px;
+                border-radius: 16px;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 32px rgba(0,212,255,0.05);
+            ">
+                <h3 style="color:#00d4ff; margin-top: 0; font-size: 22px;">👥 Smart Team Management</h3>
+                <p style="color: #cbd5e1; font-size: 15px; margin-bottom: 0;">
+                    Eliminate the chaos of group formation. Guidance.AI enforces strict team constraints and provides a centralized hub to facilitate efficient, organized collaboration among students.
+                </p>
+            </div>
+
+            <div style="
+                flex: 1;
+                min-width: 280px;
+                background: rgba(255,255,255,0.02);
+                border: 1px solid rgba(0,255,204,0.2);
+                padding: 30px;
+                border-radius: 16px;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 32px rgba(0,255,204,0.05);
+            ">
+                <h3 style="color:#00ffcc; margin-top: 0; font-size: 22px;">✅ Structured Approvals</h3>
+                <p style="color: #cbd5e1; font-size: 15px; margin-bottom: 0;">
+                    We replace messy email threads with a clean, transparent faculty approval workflow. Proposals are reviewed, tracked, and automatically converted into active projects upon approval.
+                </p>
+            </div>
+        </div>
+
+        <div style="
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: linear-gradient(90deg, rgba(255,0,204,0.05), rgba(0,212,255,0.05), rgba(0,255,204,0.05));
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 40px 20px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        ">
+            <div style="text-align: center;">
+                <div style="font-size: 36px; font-weight: bold; color: #ff00cc; margin-bottom: 5px;">0%</div>
+                <div style="color: #a0aec0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Duplicate Submissions</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 36px; font-weight: bold; color: #00d4ff; margin-bottom: 5px;">100%</div>
+                <div style="color: #a0aec0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Workflow Visibility</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 36px; font-weight: bold; color: #00ffcc; margin-bottom: 5px;">1 Hub</div>
+                <div style="color: #a0aec0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">For All Project Needs</div>
+            </div>
+        </div>
+
+        <div style="
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        ">
+            <h2 style="color:#00ffcc; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px;">🔮 Future Scope & Innovation</h2>
+            <ul style="
+                list-style-type: none; 
+                padding: 0; 
+                margin: 0;
+            ">
+                <li style="margin-bottom: 15px; display: flex; align-items: flex-start;">
+                    <span style="color: #00ffcc; margin-right: 15px; font-size: 18px;">▸</span>
+                    <span><strong>AI Idea Generation:</strong> Leveraging Gemini to help students brainstorm and refine innovative project concepts.</span>
+                </li>
+                <li style="margin-bottom: 15px; display: flex; align-items: flex-start;">
+                    <span style="color: #00ffcc; margin-right: 15px; font-size: 18px;">▸</span>
+                    <span><strong>Gamification:</strong> Introducing a leaderboard ranking system to encourage healthy competition and high-quality outputs.</span>
+                </li>
+                <li style="margin-bottom: 15px; display: flex; align-items: flex-start;">
+                    <span style="color: #00ffcc; margin-right: 15px; font-size: 18px;">▸</span>
+                    <span><strong>Advanced Analytics:</strong> Deep project evaluation metrics and insights for faculty administrators.</span>
+                </li>
+                <li style="display: flex; align-items: flex-start;">
+                    <span style="color: #00ffcc; margin-right: 15px; font-size: 18px;">▸</span>
+                    <span><strong>End-to-End Tracking:</strong> Full Software Development Life Cycle (SDLC) tracking embedded directly into the platform.</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
