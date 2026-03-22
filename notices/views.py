@@ -16,17 +16,17 @@ def create_notice(request):
         message = request.POST.get('message')
         team_ids = request.POST.getlist('teams')
 
-        
+        notice = Notice.objects.create(
+            title=title,
+            message=message,
+            created_by = request.user,
+        )
+
         if team_ids:
             selected_teams = Team.objects.filter(id__in=team_ids)
-            Notice.teams.set(selected_teams)
+            notice.teams.set(selected_teams)
 
-        # Notice.objects.create(
-        #     title=title,
-        #     message=message,
-        #     created_by = request.user,
-        #     team = team
-        # )
+        
 
         return redirect('faculty_dashboard')
     

@@ -27,17 +27,15 @@ class Project(models.Model):
 
     tech_stack = models.CharField(max_length=300)
 
-    screenshots = models.ImageField(
-        upload_to='project_screenshots/',
-        null=True,
-        blank=True
-    )
+    demo_video = models.URLField(null=True, blank=True)
 
     documentation = models.FileField(
         upload_to='project_docs/',
         null=True,
         blank=True
     )
+
+    github_link = models.URLField(null=True, blank=True)
 
     evaluated_marks = models.FloatField(null=True, blank=True)
 
@@ -69,3 +67,15 @@ class Project(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.team.name}"
+    
+
+class ProjectScreenshot(models.Model):
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='screenshots_list'
+    )
+    image = models.ImageField(upload_to='project_screenshots/')
+
+    def __str__(self):
+        return f"Screenshot for {self.project.title}"

@@ -33,6 +33,7 @@ urlpatterns = [
     path('ideas/', include('ideas.urls')),
     path('teams/', include('teams.urls')),
     path('notices/', include('notices.urls')),
+    path("projects/", include("projects.urls")),
 ]
 
 if settings.DEBUG:

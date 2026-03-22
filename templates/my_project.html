@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>My Project</h2>
+<hr>
+
+<h3>{{ project.title }}</h3>
+<p>{{ project.abstract }}</p>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Tech Stack</label><br>
+    <input type="text" name="tech_stack" value="{{ project.tech_stack }}"><br><br>
+
+    <label>GitHub Link</label><br>
+    <input type="url" name="github_link" value="{{ project.github_link }}"><br><br>
+
+    <label>Upload Screenshots (Max 5)</label><br>
+    <input type="file" name="screenshots" multiple><br><br>
+
+    <label>Demo Video (YouTube Link)</label><br>
+    <input type="url" name="demo_video" value="{{ project.demo_video }}"><br><br>
+
+    <label>Upload Documentation</label><br>
+    <input type="file" name="documentation"><br><br>
+
+    <button type="submit">Update Project</button>
+
+</form>
+
+<hr>
+
+{% if project.screenshots_list.all %}
+    <h4>Screenshots:</h4>
+    {% for shot in project.screenshots_list.all %}
+        <img src="{{ shot.image.url }}" width="200" style="margin:5px;">
+    {% endfor %}
+{% endif %}
+
+{% if project.demo_video %}
+    <h4>Demo Video:</h4>
+    <iframe width="400" height="250"
+        src="{{ project.demo_video|cut:'watch?v='|add:'embed/' }}"
+        frameborder="0" allowfullscreen>
+    </iframe>
+{% endif %}
+
+{% if project.documentation %}
+<p>
+    <a href="{{ project.documentation.url }}">Download Documentation</a>
+</p>
+{% endif %}
+
+{% endblock %}
