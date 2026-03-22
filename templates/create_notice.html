@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="facultyIdeasSection">
+<div class="facultyIdeasHeading">
+    <h2>Post the Notices</h2>
+</div>
+</section>
+
+<section class="createNotice">
+    <form method="POST">
+        {% csrf_token %}
+    
+        <input type="text" name="title" placeholder="Title" required><br>
+    
+        <textarea name="message" placeholder="Message" required></textarea><br>
+    
+        <label>Select Teams:</label><br>
+    
+        <select name="teams" multiple>
+            <option value>All Students</option>
+            {% for team in teams %}
+            <option value="{{ team.id }}">{{ team.name }}</option>
+            {% endfor %}
+        </select> <br>
+    
+        <button type="submit">Post Notice</button>
+    </form>
+</section>
+
+{% endblock %}
