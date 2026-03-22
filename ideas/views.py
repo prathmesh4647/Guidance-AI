@@ -36,7 +36,15 @@ def submit_idea(request):
     if idea_count >= 3:
         return render(request, 'idea_limit.html')
     
+    approved_exists = Idea.objects.filter(
+        team=team,
+        status="approved"
+    ).exists()
 
+    if approved_exists:
+        return render(request, "error.html", {
+            "message": "Your team already has an approved idea."
+        })
 
     if request.method == "POST":
         title = request.POST.get("title")
@@ -121,6 +129,7 @@ def idea_generator(request):
 
 #Functions for approving, rejecting and adding remarks
 from projects.models import Project
+from django.utils.timezone import now
 
 @login_required
 def approve_idea(request, idea_id):
@@ -135,6 +144,11 @@ def approve_idea(request, idea_id):
         status='approved'
     ).exclude(id=idea.id)
 
+    if idea.status == "approved":
+        return render(request, "error.html", {
+            "message": "This idea is already approved and cannot be modified."
+        })
+
     if existing.exists():
         return render(request, "error.html", {
             "message": "This team already has an approved idea."
@@ -144,22 +158,29 @@ def approve_idea(request, idea_id):
 
         remarks = request.POST.get("remarks")
 
-        # update idea
+        # Update idea
         Idea.objects.filter(id=idea.id).update(
             status="approved",
             remarks=remarks
         )
 
-        # create project automatically
+        # Refresh object
+        idea.refresh_from_db()
+
+        # Prevent duplicate project
         if not hasattr(idea.team, "project"):
-            Project.objects.create(
-                team=idea.team,
-                final_idea=idea,
-                tech_stack="To be updated by student"
+
+            Project.objects.update_or_create(
+            team=idea.team,
+            defaults={
+                "final_idea": idea,
+                "tech_stack": "To be updated",
+                "status": "pending",
+                "approved_at": now()
+                }
             )
 
     return redirect("faculty_ideas")
-
 
 @login_required
 def reject_idea(request, idea_id):
@@ -180,6 +201,10 @@ def reject_idea(request, idea_id):
             status="rejected",
             remarks=remarks
         )
+        if idea.status == "approved":
+            return render(request, "error.html", {
+            "message": "This idea is already approved and cannot be modified."
+        })
 
     return redirect("faculty_ideas")
 

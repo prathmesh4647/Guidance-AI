@@ -1,56 +1,72 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
 
-{% block content %}
+<h2>Final Approved Idea</h2>
+<hr />
+
+{% for idea in ideas %} {% if idea.status == "approved" %}
+
+<div
+  style="
+    background: #d4edda;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: #155724;
+  "
+>
+  <h3>{{ idea.title }}</h3>
+  <p>{{ idea.abstract }}</p>
+  <p>
+    <b>Status:</b>
+    ✅ Approved
+  </p>
+</div>
+
+{% endif %} {% endfor %}
 
 <h2>My Submitted Ideas</h2>
-<hr>
+<hr />
 
 <table border="1" cellpadding="10">
+  <tr>
+    <th>Title</th>
+    <th>Status</th>
+    <th>Similarity</th>
+    <th>Remarks</th>
+    <th>Action</th>
+  </tr>
 
-<tr>
-<th>Title</th>
-<th>Status</th>
-<th>Similarity</th>
-<th>Remarks</th>
-<th>Action</th>
-</tr>
+  {% for idea in ideas %}
 
-{% for idea in ideas %}
+  <tr>
+    <td>{{ idea.title }}</td>
 
-<tr>
+    <td>{{ idea.status }}</td>
 
-<td>{{ idea.title }}</td>
+    <td>{{ idea.similarity_score|floatformat:2 }}</td>
 
-<td>{{ idea.status }}</td>
+    <td>{{ idea.remarks }}</td>
 
-<td>{{ idea.similarity_score|floatformat:2 }}</td>
+    <td>
+      {% if idea.status == "rejected" %}
+      <a href="{% url 'edit_idea' idea.id %}">
+        <button>Edit & Resubmit</button>
+      </a>
+      {% endif %}
+    </td>
+  </tr>
 
-<td>{{ idea.remarks }}</td>
+  {% empty %}
 
-<td>
+  <tr>
+    <td colspan="5">No ideas submitted yet.</td>
+  </tr>
 
-{% if idea.status == "rejected" %}
-<a href="{% url 'edit_idea' idea.id %}">
-<button>Edit & Resubmit</button>
-</a>
-{% endif %}
-
-</td>
-
-</tr>
-
-{% empty %}
-
-<tr>
-<td colspan="5">No ideas submitted yet.</td>
-</tr>
-
-{% endfor %}
-
+  {% endfor %}
 </table>
 
 <a href="{% url 'submit_idea' %}">
-<button>Submit New Idea</button>
+  <button>Submit New Idea</button>
 </a>
 
 {% endblock %}

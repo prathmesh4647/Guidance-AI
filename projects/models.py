@@ -58,6 +58,14 @@ class Project(models.Model):
         # Ensure selected idea belongs to same team
         if self.final_idea.team != self.team:
             raise ValidationError("Selected idea does not belong to this team.")
+        
+    def save(self, *args, **kwargs):
+
+        if self.final_idea:
+           self.title = self.final_idea.title
+           self.abstract = self.final_idea.abstract
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.title} - {self.team.name}"

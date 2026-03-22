@@ -1,57 +1,70 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <section class="facultyIdeasSection">
-    <div class="facultyIdeasHeading">
-        <h2>Faculty Plagiarism Dashboard</h2>
-    </div>
+  <div class="facultyIdeasHeading">
+    <h2>Faculty Plagiarism Dashboard</h2>
+  </div>
 
-    <table border="1" cellpadding="10">
-        <tr>
-            <th>Team</th>
-            <th>Title</th>
-            <th>Status</th>
-            <th>Similarity %</th>
-            <th>Risk</th>
-            <th>Action</th>
-        </tr>
+  <table border="1" cellpadding="10">
+    <tr>
+      <th>Team</th>
+      <th>Title</th>
+      <th>Status</th>
+      <th>Similarity %</th>
+      <th>Risk</th>
+      <th>Action</th>
+    </tr>
 
-        {% for idea in ideas %}
-        <tr>
-            <td>{{ idea.team.name }}</td>
-            <td>{{ idea.title }}</td>
-            <td>{{ idea.status }}</td>
-            <td>{{ idea.similarity_score|floatformat:2|add:"0"|floatformat:2}}</td>
+    {% for idea in ideas %}
+    <tr>
+      <td>{{ idea.team.name }}</td>
+      <td>{{ idea.title }}</td>
+      <td>{{ idea.status }}</td>
+      <td>{{ idea.similarity_score|floatformat:2|add:"0"|floatformat:2}}</td>
 
-            <td>
-                {% if idea.similarity_score > 0.75 %}
-                <span style="color:red;">High 🚨</span>
-                {% elif idea.similarity_score > 0.5 %}
-                <span style="color:orange;">Medium ⚠️</span>
-                {% else %}
-                <span style="color:green;">Low ✅</span>
-                {% endif %}
-            </td>
+      <td>
+        {% if idea.similarity_score > 0.75 %}
+        <span style="color: red">High 🚨</span>
+        {% elif idea.similarity_score > 0.5 %}
+        <span style="color: orange">Medium ⚠️</span>
+        {% else %}
+        <span style="color: green">Low ✅</span>
+        {% endif %}
+      </td>
 
-            <td>
-                <form method="POST" action="{% url 'approve_idea' idea.id %}"
-                    style="margin-bottom:5px;">
-                    {% csrf_token %}
-                    <textarea name="remarks" placeholder="Remarks"
-                        rows="2"></textarea><br>
-                    <button type="submit">Approve</button>
-                </form>
+      <td>
+        {% if idea.status == "pending" %}
 
-                <form method="POST" action="{% url 'reject_idea' idea.id %}">
-                    {% csrf_token %}
-                    <textarea name="remarks" placeholder="Remarks"
-                        rows="2"></textarea><br>
-                    <button type="submit">Reject</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+        <form
+          method="POST"
+          action="{% url 'approve_idea' idea.id %}"
+          style="margin-bottom: 5px"
+        >
+          {% csrf_token %}
+          <textarea name="remarks" placeholder="Remarks" rows="2"></textarea>
+          <br />
+          <button type="submit">Approve</button>
+        </form>
+
+        <form method="POST" action="{% url 'reject_idea' idea.id %}">
+          {% csrf_token %}
+          <textarea name="remarks" placeholder="Remarks" rows="2"></textarea>
+          <br />
+          <button type="submit">Reject</button>
+        </form>
+
+        {% elif idea.status == "approved" %}
+
+        <span style="color: green; font-weight: bold">✅ Approved</span>
+
+        {% else %}
+
+        <span style="color: red">❌ Rejected</span>
+
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
 </section>
 
 {% endblock %}
