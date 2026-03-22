@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<section class="heading">
+<section class="dashboardSection1">
     <h2>Welcome, {{ request.user.username }}</h2>
     <a href="{% url 'logout' %}">
         <button>Logout</button>
@@ -11,7 +11,7 @@
 
 <hr>
 
-<section class="featureSection">
+<div class="dashboardSection2">
     <div>
         <h2>Plagiarism Dashboard</h2>
         <hr>
@@ -21,7 +21,8 @@
             <button>Open Dashboard</button>
         </a>
     </div>
-
+</div>
+<div class="dashboardSection2">
     <div>
         <h2>Manage Teams</h2>
         <hr>
@@ -31,7 +32,8 @@
             <button>Go Ahead</button>
         </a>
     </div>
-
+</div>
+<div class="dashboardSection2">
     <div>
         <h2>Notice Board</h2>
         <hr>
@@ -41,6 +43,6 @@
             <button>Go Ahead</button>
         </a>
     </div>
-</section>
+</div>
 
 {% endblock %}

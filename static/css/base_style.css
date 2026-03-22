@@ -614,85 +614,125 @@ nav ul li {
   border-radius: 10px;
 }
 
-/* manage_teams.html chi css */
-.manageteamFirstSection > h2{
-  font-size: 3rem;
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  color: #F68048;
-
-}
-
-.manageteamSecondSection{
-  display: flex;
-  justify-content: space-around;
-  margin: 80px;
+/* Submit Ideas  */
+.ideaSubmissionSection {
+  display: block;
+  justify-content: center;
+  margin-top: 70px;
   text-align: center;
+  justify-items: center ;
 }
 
-.manageteamSecondSection > div{
-  width: 30%;
+.ideaSubmissionSection .ideaSubmission {
+  width: 70%;
   height: 100%;
   background: rgba(255, 255, 255, 0.15); /* transparent */
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(90px);
   -webkit-backdrop-filter: blur(10px); /* Safari */
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
   z-index: 1000;
   padding: 10px;  
-}
-.manageteamSecondSection > div > h3{
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  font-size: 1.2rem;
-  color: #EEEEEE;
-}
-.manageteamSecondSection > div > form > input{
-  width: 90%;
-  height: 50px;
-  font-family: monospace;
-  text-align: center;
-  margin: 5px;
-  border-radius: 10px;
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  border-radius: 30px;
+  justify-items: center;
+  margin-top: 40px;
+  margin-bottom: 150px;
 }
 
-.manageteamSecondSection > div > form > button{
-  width: 30%;
+.ideaSubmissionheading{
+  padding: 40px 0 40px 0;
+  background: linear-gradient(135deg, #5b3df5, #9333ea);
+  width: 70%;
+  border-radius: 30px;
+  margin: 20px 0 20px 0;
+}
+
+.ideaSubmissionheading > h2{
+  font-size: 35px;
+  margin: 0 0 5px 0;
+}
+
+.ideaSubmissionSection .ideaSubmission > form > input {
+  text-align: center;
   height: 40px;
+  width: 90%;
   border-radius: 10px;
-  margin: 5px;
-  background-color: #DFD0B8;
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  margin-bottom: 20px;
+  margin-top: 10px;
 }
 
-.manageteamThirdSection > h3{
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  margin: 5px;
+.ideaSubmissionSection .ideaSubmission > form{
+  width: 100%;
+  margin-top: 20px;
 }
 
-.manageteamThirdSection{
-  display: flex;
-  justify-content: space-around;
-  margin: 80px 0;
+.ideaSubmissionSection .ideaSubmission > form > textarea{
+  text-align: center;
+  height: 100px;
+  width: 90%;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.ideaSubmissionSection .ideaSubmission > form > button{
+  display: inline-block;
+  padding: 14px 30px;
+  background: linear-gradient(135deg, #6d28d9, #9333ea);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 50px;
+}
+
+/* Faculty Ideas */
+.facultyIdeasSection {
+  justify-items: center;
+  width: 100%;
+}
+
+.facultyIdeasSection .facultyIdeasHeading {
+  padding: 10px;
+  background: linear-gradient(135deg, #5b3df5, #9333ea);
+  width: 35%;
+  border-radius: 10px;
+  margin: 20px 0 20px 0;
+}
+
+.facultyIdeasSection > table{
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 5%;
+}
+
+.facultyIdeasSection > th{
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 12px;
+
+}
+
+.facultyIdeasSection > td {
+  margin: 5px;
+  padding: 12px;
   text-align: center;
 }
-.manageteamThirdSection > div {
-  width: 30%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.15); /* transparent */
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(10px); /* Safari */
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
-  z-index: 1000;
-  padding: 10px;  
+
+.facultyIdeasSection > tr:nth-child(even) {
+  background-color: #f8f9fa;
 }
 
-.manageteamThirdSection > div > h4{
-  color: #F68048;
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-}
-
-.manageteamThirdSection  > div > .buttons > button{
-  width: 10%;
-  height: 10%;
+.facultyIdeasSection > tr:hover {
+  background-color: #eef2ff;
+  transition: 0.3s;
 }
