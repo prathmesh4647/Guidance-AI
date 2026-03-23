@@ -2,7 +2,115 @@
 
 {% block content %}
 
-    {# <h1>You are Not Part of Any Team</h1> #}
-        <h1>{{message}}</h1>
+<style>
+    .neon-error-btn {
+        background: rgba(255, 77, 77, 0.1);
+        border: 1px solid #ff4d4d;
+        color: #ff4d4d;
+        padding: 12px 28px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(255, 77, 77, 0.15);
+    }
+    .neon-error-btn:hover {
+        background: #ff4d4d;
+        color: white;
+        box-shadow: 0 0 20px rgba(255, 77, 77, 0.4);
+        transform: translateY(-2px);
+    }
+    .home-link {
+        color: #64748b;
+        font-size: 13px;
+        text-decoration: none;
+        margin-top: 20px;
+        display: inline-block;
+        transition: color 0.3s ease;
+    }
+    .home-link:hover {
+        color: #00d4ff;
+    }
+</style>
+
+<div style="
+    min-height: 100vh;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+">
+
+    <div style="
+        width: 100%;
+        max-width: 500px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255, 77, 77, 0.2);
+        border-top: 4px solid #ff4d4d;
+        padding: 40px 30px;
+        border-radius: 16px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        margin-top: 40px;
+        text-align: center;
+    ">
+
+        <div style="
+            width: 70px; 
+            height: 70px; 
+            background: rgba(255, 77, 77, 0.05); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin: 0 auto 20px auto; 
+            border: 2px dashed rgba(255, 77, 77, 0.3);
+        ">
+            <span style="font-size: 32px;">⚠️</span>
+        </div>
+
+        <h1 style="
+            font-size: 24px;
+            font-weight: 800;
+            color: #ff4d4d;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 77, 77, 0.3);
+        ">
+            Action Failed
+        </h1>
+
+        <div style="
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        ">
+            <p style="color: #cbd5e1; font-size: 16px; margin: 0; line-height: 1.6;">
+                {{ message }}
+            </p>
+        </div>
+
+        <div>
+            <a href="javascript:history.back()" class="neon-error-btn">
+                ⬅️ Go Back & Try Again
+            </a>
+        </div>
+        
+        <div>
+            <a href="/" class="home-link">
+                Or return to the Guidance.AI homepage
+            </a>
+        </div>
+
+    </div>
+</div>
 
 {% endblock %}

@@ -113,17 +113,24 @@ def idea_generator(request):
     if request.user.role != "student":
         return redirect("login")
 
-    ideas = None
+    ai_response = None 
 
     if request.method == "POST":
         domain = request.POST.get("domain")
         industry = request.POST.get("industry")
         problem = request.POST.get("problem")
 
-        ideas = generate_innovative_ideas(domain, industry, problem)
+        # Get the raw output from your AI engine (which is currently a list)
+        raw_output = generate_innovative_ideas(domain, industry, problem)
+
+        # FIX: Check if the output is a list, and join it into a single string with newlines
+        if isinstance(raw_output, list):
+            ai_response = "\n".join(raw_output)
+        else:
+            ai_response = raw_output  # Fallback just in case it's already a string
 
     return render(request, "idea_generator.html", {
-        "ideas": ideas
+        "ai_response": ai_response 
     })
 
 

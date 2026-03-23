@@ -1,24 +1,172 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="facultyIdeasSection">
-<div class="facultyIdeasHeading">
-    <h2>Notices</h2>
-</div>
-</section>
 
-{% for notice in notices %}
-<div>
-    <h3>{{ notice.title }}</h3>
-    <p>{{ notice.message }}</p>
-    <small>{{ notice.created_at }}</small>
-    <small>
-        Posted by: {{ notice.created_by.first_name }} {{notice.created_by.last_name }}
-    </small><br>
-    <hr>
+<style>
+    .notice-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-left: 4px solid #ffaa00;
+        border-radius: 12px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .notice-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(255, 170, 0, 0.15);
+        border-color: rgba(255, 170, 0, 0.3);
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .notice-title {
+        color: #ffaa00;
+        font-size: 22px;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 15px;
+        letter-spacing: 0.5px;
+    }
+
+    .notice-message {
+        color: #e2e8f0;
+        font-size: 15px;
+        line-height: 1.7;
+        margin-bottom: 25px;
+        white-space: pre-wrap; /* Preserves line breaks in the message */
+    }
+
+    .notice-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 15px;
+        font-size: 13px;
+        color: #a0aec0;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .notice-author {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 170, 0, 0.1);
+        color: #ffaa00;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .secondary-back-btn {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #cbd5e1;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .secondary-back-btn:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+</style>
+
+<div style="
+    min-height: 100vh;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+">
+
+    <div style="max-width: 900px; margin: auto;">
+
+        <header style="margin-bottom: 40px; display: flex; align-items: center; gap: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;">
+            <div style="
+                width: 60px; 
+                height: 60px; 
+                background: rgba(255, 170, 0, 0.1); 
+                border-radius: 12px; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                border: 1px solid rgba(255, 170, 0, 0.3);
+            ">
+                <span style="font-size: 28px;">📢</span>
+            </div>
+            <div>
+                <h2 style="
+                    font-size: 32px;
+                    font-weight: 800;
+                    margin: 0 0 5px 0;
+                    color: #fff;
+                    text-shadow: 0 0 15px rgba(255, 170, 0, 0.2);
+                ">
+                    Notice Board
+                </h2>
+                <p style="color: #a0aec0; font-size: 15px; margin: 0;">
+                    Important announcements and updates from your faculty guide.
+                </p>
+            </div>
+        </header>
+
+        <div>
+            {% for notice in notices %}
+            
+            <div class="notice-card">
+                <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(255, 170, 0, 0.1); filter: blur(50px); border-radius: 50%; pointer-events: none;"></div>
+                
+                <h3 class="notice-title">{{ notice.title }}</h3>
+                <div class="notice-message">{{ notice.message }}</div>
+                
+                <div class="notice-footer">
+                    <div class="notice-author">
+                        👨‍🏫 {{ notice.created_by.first_name }} {{ notice.created_by.last_name }}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span>🕒</span> {{ notice.created_at }}
+                    </div>
+                </div>
+            </div>
+
+            {% empty %}
+            
+            <div style="
+                background: rgba(255,255,255,0.02);
+                border: 1px dashed rgba(255,255,255,0.2);
+                border-radius: 12px;
+                padding: 60px 20px;
+                text-align: center;
+                backdrop-filter: blur(10px);
+            ">
+                <span style="font-size: 40px; opacity: 0.5; display: block; margin-bottom: 15px;">📭</span>
+                <h3 style="color: #cbd5e1; margin: 0 0 10px 0; font-size: 20px;">No New Notices</h3>
+                <p style="color: #64748b; font-size: 15px; margin: 0;">You're all caught up! There are currently no announcements to display.</p>
+            </div>
+            
+            {% endfor %}
+        </div>
+
+        <div style="margin-top: 40px;">
+            <a href="{% url 'student_dashboard' %}" style="text-decoration: none;">
+                <button class="secondary-back-btn">⬅️ Back to Dashboard</button>
+            </a>
+        </div>
+
+    </div>
 </div>
-{% empty %}
-<p>No notices available</p>
-{% endfor %}
 
 {% endblock %}

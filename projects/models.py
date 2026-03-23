@@ -79,3 +79,4 @@ class ProjectScreenshot(models.Model):
 
     def __str__(self):
         return f"Screenshot for {self.project.title}"
+    

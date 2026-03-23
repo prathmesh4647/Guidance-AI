@@ -1,70 +1,210 @@
-{% extends "base.html" %} {% block content %}
-<section class="facultyIdeasSection">
-  <div class="facultyIdeasHeading">
-    <h2>Faculty Plagiarism Dashboard</h2>
-  </div>
+{% extends "base.html" %} 
 
-  <table border="1" cellpadding="10">
-    <tr>
-      <th>Team</th>
-      <th>Title</th>
-      <th>Status</th>
-      <th>Similarity %</th>
-      <th>Risk</th>
-      <th>Action</th>
-    </tr>
+{% block content %}
 
-    {% for idea in ideas %}
-    <tr>
-      <td>{{ idea.team.name }}</td>
-      <td>{{ idea.title }}</td>
-      <td>{{ idea.status }}</td>
-      <td>{{ idea.similarity_score|floatformat:2|add:"0"|floatformat:2}}</td>
+<style>
+    .glass-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    .glass-table th {
+        background: rgba(255, 255, 255, 0.05);
+        color: #00d4ff;
+        padding: 16px;
+        text-align: left;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
+    .glass-table td {
+        padding: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: #cbd5e1;
+        vertical-align: middle;
+    }
+    .glass-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+        transition: background 0.3s ease;
+    }
+    .glass-input {
+        width: 100%;
+        padding: 8px 12px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        color: white;
+        font-size: 13px;
+        outline: none;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        resize: vertical;
+        font-family: inherit;
+    }
+    .glass-input:focus {
+        border-color: #00d4ff;
+        box-shadow: 0 0 8px rgba(0, 212, 255, 0.2);
+    }
+    .approve-btn {
+        width: 100%;
+        background: rgba(0, 255, 204, 0.1);
+        border: 1px solid #00ffcc;
+        color: #00ffcc;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    .approve-btn:hover {
+        background: #00ffcc;
+        color: #0a0f2c;
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+    }
+    .reject-btn {
+        width: 100%;
+        background: rgba(255, 0, 204, 0.1);
+        border: 1px solid #ff00cc;
+        color: #ff00cc;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    .reject-btn:hover {
+        background: #ff00cc;
+        color: white;
+        box-shadow: 0 0 15px rgba(255, 0, 204, 0.4);
+    }
+    .badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        display: inline-block;
+    }
+</style>
 
-      <td>
-        {% if idea.similarity_score > 0.75 %}
-        <span style="color: red">High 🚨</span>
-        {% elif idea.similarity_score > 0.5 %}
-        <span style="color: orange">Medium ⚠️</span>
-        {% else %}
-        <span style="color: green">Low ✅</span>
-        {% endif %}
-      </td>
+<div style="
+    min-height: 100vh;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+">
 
-      <td>
-        {% if idea.status == "pending" %}
+    <div style="max-width: 1200px; margin: auto;">
 
-        <form
-          method="POST"
-          action="{% url 'approve_idea' idea.id %}"
-          style="margin-bottom: 5px"
-        >
-          {% csrf_token %}
-          <textarea name="remarks" placeholder="Remarks" rows="2"></textarea>
-          <br />
-          <button type="submit">Approve</button>
-        </form>
+        <header style="margin-bottom: 40px; text-align: left;">
+            <h2 style="
+                font-size: 32px;
+                font-weight: 800;
+                margin: 0;
+                color: #00d4ff;
+                text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+            ">
+                🛡️ Faculty Plagiarism Dashboard
+            </h2>
+            <p style="color: #a0aec0; font-size: 15px; margin-top: 5px;">
+                Review, evaluate, and manage student project submissions and AI similarity flags.
+            </p>
+        </header>
 
-        <form method="POST" action="{% url 'reject_idea' idea.id %}">
-          {% csrf_token %}
-          <textarea name="remarks" placeholder="Remarks" rows="2"></textarea>
-          <br />
-          <button type="submit">Reject</button>
-        </form>
+        <section style="
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            overflow-x: auto;
+            padding-bottom: 10px;
+        ">
+            <table class="glass-table">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">Team</th>
+                        <th style="width: 25%;">Title</th>
+                        <th style="width: 10%;">Status</th>
+                        <th style="width: 10%;">Similarity %</th>
+                        <th style="width: 10%;">Risk</th>
+                        <th style="width: 30%; text-align: center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for idea in ideas %}
+                    <tr>
+                        <td style="font-weight: bold; color: #fff;">{{ idea.team.name }}</td>
+                        <td style="color: #cbd5e1;">{{ idea.title }}</td>
+                        
+                        <td>
+                            {% if idea.status|lower == "approved" %}
+                                <span class="badge" style="background: rgba(0,255,204,0.1); color: #00ffcc; border: 1px solid rgba(0,255,204,0.2);">Approved</span>
+                            {% elif idea.status|lower == "rejected" %}
+                                <span class="badge" style="background: rgba(255,0,204,0.1); color: #ff00cc; border: 1px solid rgba(255,0,204,0.2);">Rejected</span>
+                            {% else %}
+                                <span class="badge" style="background: rgba(0,212,255,0.1); color: #00d4ff; border: 1px solid rgba(0,212,255,0.2);">{{ idea.status|title }}</span>
+                            {% endif %}
+                        </td>
+                        
+                        <td style="font-family: monospace; font-size: 14px;">
+                            {{ idea.similarity_score|floatformat:2|add:"0"|floatformat:2 }}
+                        </td>
 
-        {% elif idea.status == "approved" %}
+                        <td>
+                            {% if idea.similarity_score > 0.75 %}
+                                <span class="badge" style="background: rgba(255, 77, 77, 0.1); color: #ff4d4d; border: 1px solid #ff4d4d;">High 🚨</span>
+                            {% elif idea.similarity_score > 0.5 %}
+                                <span class="badge" style="background: rgba(255, 165, 0, 0.1); color: #ffa500; border: 1px solid #ffa500;">Medium ⚠️</span>
+                            {% else %}
+                                <span class="badge" style="background: rgba(0, 255, 204, 0.1); color: #00ffcc; border: 1px solid #00ffcc;">Low ✅</span>
+                            {% endif %}
+                        </td>
 
-        <span style="color: green; font-weight: bold">✅ Approved</span>
+                        <td>
+                            {% if idea.status == "pending" %}
+                                <div style="display: flex; gap: 10px; justify-content: center;">
+                                    
+                                    <form method="POST" action="{% url 'approve_idea' idea.id %}" style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                                        {% csrf_token %}
+                                        <textarea name="remarks" class="glass-input" placeholder="Approval remarks..." rows="2"></textarea>
+                                        <button type="submit" class="approve-btn">Approve</button>
+                                    </form>
 
-        {% else %}
+                                    <form method="POST" action="{% url 'reject_idea' idea.id %}" style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+                                        {% csrf_token %}
+                                        <textarea name="remarks" class="glass-input" placeholder="Rejection remarks..." rows="2"></textarea>
+                                        <button type="submit" class="reject-btn">Reject</button>
+                                    </form>
 
-        <span style="color: red">❌ Rejected</span>
+                                </div>
 
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </table>
-</section>
+                            {% elif idea.status == "approved" %}
+                                <div style="text-align: center;">
+                                    <span style="color: #00ffcc; font-weight: bold; font-size: 14px;">✅ Idea Approved</span>
+                                </div>
+                            {% else %}
+                                <div style="text-align: center;">
+                                    <span style="color: #ff00cc; font-weight: bold; font-size: 14px;">❌ Idea Rejected</span>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #a0aec0; font-style: italic;">
+                            No project ideas currently pending review.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+    </div>
+</div>
 
 {% endblock %}

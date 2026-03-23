@@ -1,33 +1,177 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
 
 {% block content %}
 
-<h2>Edit & Resubmit Idea</h2>
-<hr>
+<style>
+    .glass-input {
+        width: 100%;
+        padding: 14px 18px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        color: white;
+        font-size: 15px;
+        outline: none;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+    .glass-input:focus {
+        border-color: #ff00cc;
+        box-shadow: 0 0 12px rgba(255, 0, 204, 0.2);
+        background: rgba(0, 0, 0, 0.3);
+    }
+    /* Specific styling for the file input to make it look clean */
+    .file-input-wrapper input[type=file]::file-selector-button {
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid #00d4ff;
+        color: #00d4ff;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        margin-right: 15px;
+    }
+    .file-input-wrapper input[type=file]::file-selector-button:hover {
+        background: #00d4ff;
+        color: #0a0f2c;
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+    }
+    .neon-submit-btn {
+        background: linear-gradient(90deg, #ff00cc, #00d4ff);
+        border: none;
+        color: white;
+        padding: 14px 28px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 0, 204, 0.3);
+        width: 100%;
+    }
+    .neon-submit-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+    }
+    .secondary-back-btn {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #cbd5e1;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .secondary-back-btn:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+</style>
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+<div style="
+    min-height: 100vh;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+">
 
-    <label>Idea Title</label><br>
-    <input type="text" name="title" value="{{ idea.title }}" required><br><br>
+    <div style="max-width: 700px; margin: auto;">
 
-    <label>Description</label><br>
-    <input type="text" name="description" value="{{ idea.description }}"><br><br>
+        <header style="text-align: center; margin-bottom: 30px;">
+            <h2 style="
+                font-size: 32px;
+                font-weight: 800;
+                margin-bottom: 10px;
+                color: #ff00cc;
+                text-shadow: 0 0 15px rgba(255, 0, 204, 0.3);
+            ">
+                ✏️ Edit & Resubmit Idea
+            </h2>
+            <p style="color: #a0aec0; font-size: 15px;">
+                Refine your project proposal based on faculty feedback and submit it for a second review.
+            </p>
+        </header>
 
-    <label>Abstract</label><br>
-    <textarea name="abstract" rows="5" required>{{ idea.abstract }}</textarea><br><br>
+        <div style="
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 4px solid #00d4ff;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #cbd5e1;
+        ">
+            <strong style="color: #00d4ff;">💡 Pro Tip:</strong> Make sure to address the specific remarks left by your faculty evaluator to improve your chances of approval.
+        </div>
 
-    <label>Upload Updated PPT (Optional)</label><br>
-    <input type="file" name="ppt"><br><br>
+        <div style="
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 12px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        ">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
 
-    <button type="submit">Resubmit Idea</button>
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; font-size: 14px; color: #a0aec0; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Idea Title <span style="color: #ff00cc;">*</span>
+                    </label>
+                    <input type="text" name="title" value="{{ idea.title }}" class="glass-input" required>
+                </div>
 
-</form>
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; font-size: 14px; color: #a0aec0; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Brief Description
+                    </label>
+                    <input type="text" name="description" value="{{ idea.description }}" class="glass-input">
+                </div>
 
-<br>
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; font-size: 14px; color: #a0aec0; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Full Abstract <span style="color: #ff00cc;">*</span>
+                    </label>
+                    <textarea name="abstract" rows="6" class="glass-input" style="resize: vertical;" required>{{ idea.abstract }}</textarea>
+                </div>
 
-<a href="{% url 'student_ideas' %}">
-<button>Back to My Ideas</button>
-</a>
+                <div style="margin-bottom: 35px; background: rgba(0,0,0,0.15); padding: 20px; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2);" class="file-input-wrapper">
+                    <label style="display: block; font-size: 14px; color: #00d4ff; font-weight: 600; margin-bottom: 12px;">
+                        📎 Upload Updated PPT (Optional)
+                    </label>
+                    <input type="file" name="ppt" style="color: #cbd5e1; font-size: 14px; width: 100%;">
+                    <p style="font-size: 12px; color: #64748b; margin-top: 8px; margin-bottom: 0;">If you've updated your presentation slides, attach the new version here.</p>
+                </div>
+
+                <button type="submit" class="neon-submit-btn">
+                    🚀 Resubmit Idea for Review
+                </button>
+
+            </form>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="{% url 'student_ideas' %}" style="text-decoration: none; display: inline-block; width: 100%;">
+                <button class="secondary-back-btn">⬅️ Back to My Ideas</button>
+            </a>
+        </div>
+
+    </div>
+</div>
 
 {% endblock %}

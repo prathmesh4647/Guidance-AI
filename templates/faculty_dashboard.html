@@ -1,47 +1,162 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block content %}
 
-<section class="dashboardSection1">
-    <h2>Welcome, {{ request.user.username }}</h2>
-    <a href="{% url 'logout' %}">
-        <button>Logout</button>
-    </a>
-</section>
+<style>
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+        margin-bottom: 60px;
+    }
+    
+    .dash-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 35px 30px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .dash-card:hover {
+        transform: translateY(-8px);
+        background: rgba(255, 255, 255, 0.04);
+    }
 
-<hr>
+    /* Unique Card Glowing Borders on Hover */
+    .card-cyan:hover { border-color: rgba(0, 212, 255, 0.5); box-shadow: 0 15px 35px rgba(0, 212, 255, 0.15); }
+    .card-magenta:hover { border-color: rgba(255, 0, 204, 0.5); box-shadow: 0 15px 35px rgba(255, 0, 204, 0.15); }
+    .card-gold:hover { border-color: rgba(255, 170, 0, 0.5); box-shadow: 0 15px 35px rgba(255, 170, 0, 0.15); }
 
-<div class="dashboardSection2">
-    <div>
-        <h2>Plagiarism Dashboard</h2>
-        <hr>
-        <p>Review student ideas and check similarity scores.</p>
-        <hr>
-        <a href="{% url 'faculty_ideas' %}">
-            <button>Open Dashboard</button>
-        </a>
-    </div>
-</div>
-<div class="dashboardSection2">
-    <div>
-        <h2>Manage Teams</h2>
-        <hr>
-        <p>Create and manage student teams.</p>
-        <hr>
-        <a href="{% url 'manage_teams' %}">
-            <button>Go Ahead</button>
-        </a>
-    </div>
-</div>
-<div class="dashboardSection2">
-    <div>
-        <h2>Notice Board</h2>
-        <hr>
-        <p>Post important announcements for your teams.</p>
-        <hr>
-        <a href="{% url 'create_notice' %}">
-            <button>Go Ahead</button>
-        </a>
+    .dash-icon {
+        font-size: 36px;
+        margin-bottom: 20px;
+        display: inline-block;
+    }
+
+    .dash-title {
+        color: #fff;
+        font-size: 22px;
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 15px;
+        letter-spacing: 0.5px;
+    }
+
+    .dash-desc {
+        color: #cbd5e1;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 30px;
+        flex-grow: 1; /* Pushes the button to the bottom */
+    }
+
+    .dash-btn {
+        text-align: center;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Button Colors */
+    .btn-cyan { background: rgba(0, 212, 255, 0.1); border: 1px solid #00d4ff; color: #00d4ff; }
+    .btn-cyan:hover { background: #00d4ff; color: #0a0f2c; box-shadow: 0 0 15px rgba(0, 212, 255, 0.4); }
+
+    .btn-magenta { background: rgba(255, 0, 204, 0.1); border: 1px solid #ff00cc; color: #ff00cc; }
+    .btn-magenta:hover { background: #ff00cc; color: #fff; box-shadow: 0 0 15px rgba(255, 0, 204, 0.4); }
+
+    .btn-gold { background: rgba(255, 170, 0, 0.1); border: 1px solid #ffaa00; color: #ffaa00; }
+    .btn-gold:hover { background: #ffaa00; color: #0a0f2c; box-shadow: 0 0 15px rgba(255, 170, 0, 0.4); }
+
+    .logout-btn {
+        background: transparent;
+        border: 1px solid rgba(255, 77, 77, 0.5);
+        color: #ff4d4d;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+    .logout-btn:hover {
+        background: rgba(255, 77, 77, 0.1);
+        border-color: #ff4d4d;
+        box-shadow: 0 0 15px rgba(255, 77, 77, 0.2);
+    }
+</style>
+
+<div style="
+    min-height: 100vh;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+">
+
+    <div style="max-width: 1200px; margin: auto;">
+
+        <header style="
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+            gap: 20px;
+        ">
+            <div>
+                <p style="color: #00ffcc; font-weight: 600; margin: 0 0 5px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Faculty Portal</p>
+                <h2 style="font-size: 32px; font-weight: 800; margin: 0; text-shadow: 0 0 15px rgba(255,255,255,0.1);">
+                    Welcome, Prof. {{ request.user.first_name|capfirst }} {{ request.user.last_name|capfirst }}
+                </h2>
+            </div>
+            
+            <a href="{% url 'logout' %}" class="logout-btn">
+                🚪 Logout
+            </a>
+        </header>
+
+        <div class="dashboard-grid">
+
+            <div class="dash-card card-cyan">
+                <div class="dash-icon" style="text-shadow: 0 0 15px rgba(0,212,255,0.5);">🛡️</div>
+                <h3 class="dash-title">Plagiarism Dashboard</h3>
+                <p class="dash-desc">Review student project proposals, evaluate AI-generated similarity scores, and securely approve or reject submitted ideas.</p>
+                <a href="{% url 'faculty_ideas' %}" class="dash-btn btn-cyan">Open Dashboard</a>
+            </div>
+
+            <div class="dash-card card-magenta">
+                <div class="dash-icon" style="text-shadow: 0 0 15px rgba(255,0,204,0.5);">👥</div>
+                <h3 class="dash-title">Manage Teams</h3>
+                <p class="dash-desc">Create project groups, assign unassigned students to their respective teams, and manage overall group dynamics.</p>
+                <a href="{% url 'manage_teams' %}" class="dash-btn btn-magenta">Manage Teams</a>
+            </div>
+
+            <div class="dash-card card-gold">
+                <div class="dash-icon" style="text-shadow: 0 0 15px rgba(255,170,0,0.5);">📢</div>
+                <h3 class="dash-title">Notice Board</h3>
+                <p class="dash-desc">Broadcast important announcements, upcoming deadlines, and project guidelines directly to your assigned student teams.</p>
+                <a href="{% url 'create_notice' %}" class="dash-btn btn-gold">Create Notice</a>
+            </div>
+
+        </div>
+
     </div>
 </div>
 

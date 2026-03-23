@@ -2,23 +2,123 @@
 
 {% block content %}
 
-<div class="card">
-    <h2>Confirm Deletion</h2>
+<style>
+    .neon-danger-btn {
+        background: linear-gradient(90deg, #ff4d4d, #ff00cc);
+        border: none;
+        color: white;
+        padding: 14px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+        flex: 1;
+        text-align: center;
+    }
+    .neon-danger-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 77, 77, 0.5);
+    }
+    .secondary-cancel-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #cbd5e1;
+        padding: 14px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        flex: 1;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .secondary-cancel-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+</style>
 
-    <p>
-        Are you sure you want to delete the team 
-        <strong>{{ team.name }}</strong>?
-    </p>
+<div style="
+    min-height: 100vh;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+">
 
-    <p style="color: red;">
-        ⚠ This action cannot be undone.
-    </p>
+    <div style="
+        width: 100%;
+        max-width: 480px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.1);
+        padding: 40px;
+        border-radius: 16px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        margin-top: 40px;
+        text-align: center;
+    ">
 
-    <form method="POST">
-        {% csrf_token %}
-        <button type="submit" class="delete-btn">Yes, Delete</button>
-        <a href="{% url 'manage_teams' %}" class="cancel-btn">Cancel</a>
-    </form>
+        <div style="
+            width: 64px; 
+            height: 64px; 
+            background: rgba(255, 77, 77, 0.1); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin: 0 auto 20px auto; 
+            border: 1px solid rgba(255, 77, 77, 0.3);
+        ">
+            <span style="font-size: 28px;">🗑️</span>
+        </div>
+        
+        <h2 style="
+            font-size: 26px;
+            font-weight: 800;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #ff4d4d;
+            text-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
+        ">
+            Confirm Deletion
+        </h2>
+
+        <p style="color: #cbd5e1; font-size: 16px; margin-bottom: 25px; line-height: 1.5;">
+            Are you sure you want to permanently delete the team <br>
+            <strong style="color: white; font-size: 18px;">"{{ team.name }}"</strong>?
+        </p>
+
+        <div style="
+            background: rgba(255, 77, 77, 0.05); 
+            border: 1px dashed rgba(255, 77, 77, 0.4); 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 30px; 
+            color: #ff4d4d; 
+            font-size: 14px; 
+            font-weight: 600;
+        ">
+            ⚠ Warning: This action cannot be undone. All assigned students will be removed from this team.
+        </div>
+
+        <form method="POST" style="display: flex; gap: 15px; width: 100%;">
+            {% csrf_token %}
+            <a href="{% url 'manage_teams' %}" class="secondary-cancel-btn">Cancel</a>
+            <button type="submit" class="neon-danger-btn">Yes, Delete Team</button>
+        </form>
+
+    </div>
 </div>
 
 {% endblock %}

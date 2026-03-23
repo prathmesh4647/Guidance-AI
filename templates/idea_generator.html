@@ -1,207 +1,242 @@
 {% extends "base.html" %}
+
 {% block content %}
 
 <style>
-
-    /* Page Container */
-    .idea-page {
-        max-width: 1100px;
-        margin: 60px auto;
-        padding: 20px;
-    }
-
-    /* HERO SECTION */
-    .idea-hero {
-        background: linear-gradient(135deg, #5b3df5, #9333ea);
-        padding: 40px;
-        border-radius: 20px;
-        text-align: center;
-        color: white;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        margin-bottom: 50px;
-    }
-
-    .idea-hero h2 {
-        font-size: 32px;
-        margin-bottom: 10px;
-    }
-
-    .idea-hero p {
-        font-size: 16px;
-        opacity: 0.9;
-    }
-
-    /* FORM CARD */
-    .form-container {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(20px);
-        padding: 40px;
-        border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-        margin-bottom: 50px;
-    }
-
-    .form-group {
-        margin-bottom: 25px;
-    }
-
-    .form-group label {
-        color: #ffffff;
-        font-weight: 500;
-        display: block;
-        margin-bottom: 8px;
-    }
-
-    .form-group input,
-    .form-group textarea {
+    .glass-input {
         width: 100%;
-        padding: 14px;
-        border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.2);
-        background: rgba(255,255,255,0.05);
+        padding: 14px 18px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
         color: white;
-        font-size: 14px;
-        outline: none;
-        transition: 0.3s ease;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
-        border: 1px solid #8b5cf6;
-        box-shadow: 0 0 10px rgba(139,92,246,0.6);
-    }
-
-    textarea {
-        resize: none;
-    }
-
-    /* BUTTON */
-    .generate-btn {
-        display: inline-block;
-        padding: 14px 30px;
-        background: linear-gradient(135deg, #6d28d9, #9333ea);
-        color: white;
-        border: none;
-        border-radius: 12px;
         font-size: 15px;
-        font-weight: bold;
+        outline: none;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+    .glass-input:focus {
+        border-color: #aa00ff;
+        box-shadow: 0 0 12px rgba(170, 0, 255, 0.3);
+        background: rgba(0, 0, 0, 0.3);
+    }
+    .neon-ai-btn {
+        background: linear-gradient(90deg, #aa00ff, #00d4ff);
+        border: none;
+        color: white;
+        padding: 16px 32px;
+        border-radius: 8px;
         cursor: pointer;
-        transition: 0.3s ease;
-    }
-
-    .generate-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-    }
-
-    /* IDEAS SECTION */
-    .ideas-section {
-        margin-top: 30px;
-    }
-
-    .ideas-title {
-        color: white;
-        font-size: 24px;
-        margin-bottom: 25px;
-    }
-
-    /* IDEA CARD */
-    .idea-card {
-        background: rgba(255,255,255,0.08);
-        backdrop-filter: blur(20px);
-        padding: 30px;
-        border-radius: 18px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-        margin-bottom: 30px;
-        transition: 0.3s ease;
-        color: white;
-    }
-
-    .idea-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
-
-    .idea-title {
-        font-size: 20px;
+        font-size: 16px;
         font-weight: bold;
-        color: #c084fc;
-        margin-bottom: 15px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(170, 0, 255, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
     }
-
-    .idea-content {
-        white-space: pre-wrap;
-        line-height: 1.7;
-        font-size: 14px;
-        opacity: 0.95;
+    .neon-ai-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(0, 212, 255, 0.5);
     }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .idea-hero h2 {
-            font-size: 24px;
-        }
-
-        .form-container {
-            padding: 25px;
-        }
+    .ai-result-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        border-left: 4px solid #00d4ff;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
     }
-
+    .ai-result-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(0, 212, 255, 0.15);
+        border-color: rgba(0, 212, 255, 0.4);
+    }
 </style>
 
-<div class="idea-page">
+<div style="
+    min-height: 100vh;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+">
 
-    <!-- HERO -->
-    <div class="idea-hero">
-        <h2>AI Innovation Mentor</h2>
-        <p>Generate unique, plagiarism-safe final year project ideas powered by AI.</p>
-    </div>
+    <div style="max-width: 900px; margin: auto;">
 
-    <!-- FORM -->
-    <div class="form-container">
-        <form method="POST">
-            {% csrf_token %}
-
-            <div class="form-group">
-                <label>Domain</label>
-                <input type="text" name="domain" required>
+        <header style="text-align: center; margin-bottom: 50px;">
+            <div style="
+                width: 70px; 
+                height: 70px; 
+                background: rgba(170, 0, 255, 0.1); 
+                border-radius: 50%; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                margin: 0 auto 20px auto; 
+                border: 1px solid rgba(170, 0, 255, 0.3);
+                box-shadow: 0 0 20px rgba(170, 0, 255, 0.2);
+            ">
+                <span style="font-size: 32px;">🧠</span>
             </div>
+            <h2 style="
+                font-size: 36px;
+                font-weight: 800;
+                margin-top: 0;
+                margin-bottom: 15px;
+                color: #fff;
+                letter-spacing: -0.5px;
+            ">
+                AI Innovation <span style="color: #00d4ff; text-shadow: 0 0 15px rgba(0, 212, 255, 0.4);">Mentor</span>
+            </h2>
+            <p style="color: #a0aec0; font-size: 16px; max-width: 600px; margin: 0 auto;">
+                Generate unique, highly-relevant, and plagiarism-safe final year project ideas powered by advanced AI processing.
+            </p>
+        </header>
 
-            <div class="form-group">
-                <label>Industry</label>
-                <input type="text" name="industry" required>
-            </div>
+        <div style="
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 40px;
+            border-radius: 16px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            margin-bottom: 50px;
+        ">
+            <form method="POST">
+                {% csrf_token %}
 
-            <div class="form-group">
-                <label>Problem You Want To Solve</label>
-                <textarea name="problem" rows="5" required></textarea>
-            </div>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 25px;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <label style="display: block; font-size: 13px; color: #a0aec0; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                            Core Domain <span style="color: #00d4ff;">*</span>
+                        </label>
+                        <input type="text" name="domain" class="glass-input" placeholder="e.g., Machine Learning, IoT..." required>
+                    </div>
 
-            <center>
-                <button type="submit" class="generate-btn">
-                    Generate Ideas
-                </button>
-            </center>
+                    <div style="flex: 1; min-width: 250px;">
+                        <label style="display: block; font-size: 13px; color: #a0aec0; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                            Target Industry <span style="color: #00d4ff;">*</span>
+                        </label>
+                        <input type="text" name="industry" class="glass-input" placeholder="e.g., Healthcare, Finance..." required>
+                    </div>
+                </div>
 
-        </form>
-    </div>
+                <div style="margin-bottom: 35px;">
+                    <label style="display: block; font-size: 13px; color: #a0aec0; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Specific Problem You Want To Solve <span style="color: #00d4ff;">*</span>
+                    </label>
+                    <textarea name="problem" rows="5" class="glass-input" style="resize: vertical;" placeholder="Describe the issue you want your project to address..." required></textarea>
+                </div>
 
-    <!-- RESULTS -->
-    {% if ideas %}
-    <div class="ideas-section">
-        <div class="ideas-title">Innovative Suggestions</div>
+                <div style="text-align: center;">
+                    <button type="submit" class="neon-ai-btn">
+                        ✨ Generate Innovative Ideas
+                    </button>
+                </div>
 
-        {% for idea in ideas %}
-        <div class="idea-card">
-            <div class="idea-content">
-                {{ idea }}
-            </div>
+            </form>
         </div>
-        {% endfor %}
+
+        {% if ai_response %}
+        <div style="margin-top: 50px;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px;">
+                <h3 style="font-size: 24px; font-weight: 700; color: #fff; margin: 0;">💡 Innovative Suggestions</h3>
+                <div style="height: 1px; background: rgba(255,255,255,0.1); flex-grow: 1;"></div>
+            </div>
+
+            <div id="ai-ideas-container"></div>
+
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        
+        <style>
+            /* Individual Card Styling */
+            .ai-result-card {
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid rgba(0, 212, 255, 0.2);
+                border-left: 4px solid #00d4ff;
+                padding: 30px 40px;
+                border-radius: 12px;
+                margin-bottom: 30px; /* Space between cards */
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+                
+                /* FIX: Align text to the left for readability */
+                text-align: left; 
+                font-size: 15px; 
+                color: #e2e8f0; 
+                line-height: 1.8;
+            }
+            .ai-result-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 40px rgba(0, 212, 255, 0.15);
+                border-color: rgba(0, 212, 255, 0.4);
+            }
+
+            /* Markdown Elements Styling */
+            .ai-result-card h1, .ai-result-card h2, .ai-result-card h3 {
+                color: #00d4ff;
+                margin-top: 0;
+                margin-bottom: 20px;
+                font-size: 22px;
+                border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+                padding-bottom: 10px;
+            }
+            .ai-result-card strong {
+                color: #00ffcc;
+            }
+            .ai-result-card ul, .ai-result-card ol {
+                margin-bottom: 20px;
+                padding-left: 20px;
+            }
+            .ai-result-card li {
+                margin-bottom: 10px;
+            }
+            .ai-result-card p {
+                margin-bottom: 15px;
+            }
+        </style>
+
+        <script>
+            // Safely grab the raw markdown string from Django
+            const rawMarkdown = `{{ ai_response|escapejs }}`;
+            
+            // Split the markdown by standard AI headers (e.g., "## " or "### ")
+            // This cuts the giant string into an array of smaller strings, one for each idea
+            const sections = rawMarkdown.split(/\n(?=#{2,3}\s)/);
+
+            const container = document.getElementById('ai-ideas-container');
+
+            sections.forEach(section => {
+                const trimmedSection = section.trim();
+                
+                // If the section isn't empty and isn't just a markdown dashed line
+                if (trimmedSection && trimmedSection.replace(/-/g, '').trim() !== '') {
+                    
+                    // Create a new div card for this specific idea
+                    const card = document.createElement('div');
+                    card.className = 'ai-result-card';
+                    
+                    // Parse just this section and put it in the card
+                    card.innerHTML = marked.parse(trimmedSection);
+                    
+                    // Add the card to the page
+                    container.appendChild(card);
+                }
+            });
+        </script>
+        {% endif %}
 
     </div>
-    {% endif %}
-
 </div>
 
 {% endblock %}
