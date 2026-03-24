@@ -1,51 +1,221 @@
 {% extends "base.html" %}
+
 {% block content %}
 
-<h2>🏆 Project Leaderboard</h2>
-<hr>
+<style>
+    .glass-table-wrapper {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        margin-bottom: 40px;
+    }
 
-<table border="1" cellpadding="10">
+    .glass-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
 
-<tr>
-<th>Rank</th>
-<th>Project</th>
-<th>Team</th>
-<th>Likes</th>
-<th>Batch</th>
-</tr>
+    .glass-table th {
+        padding: 20px 25px;
+        background: rgba(0, 0, 0, 0.4);
+        color: #00ffcc;
+        text-transform: uppercase;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        border-bottom: 1px solid rgba(0, 255, 204, 0.2);
+    }
 
-{% for project in projects %}
+    .glass-table td {
+        padding: 20px 25px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: #e2e8f0;
+        font-size: 15px;
+        vertical-align: middle;
+    }
 
-<tr>
+    .glass-table tr {
+        transition: background 0.3s ease;
+    }
 
-<td>
-    {% if forloop.counter == 1 %}
-        🥇
-    {% elif forloop.counter == 2 %}
-        🥈
-    {% elif forloop.counter == 3 %}
-        🥉
-    {% else %}
-        {{ forloop.counter }}
-    {% endif %}
-</td>
+    .glass-table tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
 
-<td>
-    <a href="{% url 'project_detail' project.id %}">
-        {{ project.title }}
-    </a>
-</td>
+    .glass-table tr:last-child td {
+        border-bottom: none;
+    }
 
-<td>{{ project.team.name }}</td>
+    .project-link {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
 
-<td>❤️ {{ project.likes.count }}</td>
+    .project-link:hover {
+        color: #00d4ff;
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+    }
 
-<td>{{ project.batch_year }}</td>
+    /* Rank Badges */
+    .rank-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 14px;
+    }
+    
+    .rank-1 {
+        background: rgba(255, 215, 0, 0.15);
+        color: #ffd700;
+        border: 1px solid rgba(255, 215, 0, 0.5);
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        font-size: 18px;
+    }
+    
+    .rank-2 {
+        background: rgba(192, 192, 192, 0.15);
+        color: #e2e8f0;
+        border: 1px solid rgba(192, 192, 192, 0.5);
+        box-shadow: 0 0 15px rgba(192, 192, 192, 0.2);
+        font-size: 18px;
+    }
+    
+    .rank-3 {
+        background: rgba(205, 127, 50, 0.15);
+        color: #cd7f32;
+        border: 1px solid rgba(205, 127, 50, 0.5);
+        box-shadow: 0 0 15px rgba(205, 127, 50, 0.2);
+        font-size: 18px;
+    }
+    
+    .rank-other {
+        background: rgba(255, 255, 255, 0.05);
+        color: #a0aec0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-</tr>
+    .likes-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 0, 102, 0.1);
+        color: #ff0066;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        border: 1px solid rgba(255, 0, 102, 0.2);
+    }
+</style>
 
-{% endfor %}
+<div style="
+    min-height: 100vh;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+">
 
-</table>
+    <div style="max-width: 1000px; margin: auto;">
+
+        <header style="text-align: center; margin-bottom: 40px;">
+            <div style="
+                width: 70px; 
+                height: 70px; 
+                background: rgba(255, 215, 0, 0.1); 
+                border-radius: 50%; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                margin: 0 auto 20px auto; 
+                border: 1px solid rgba(255, 215, 0, 0.3);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            ">
+                <span style="font-size: 32px;">🏆</span>
+            </div>
+            <h2 style="
+                font-size: 36px;
+                font-weight: 800;
+                margin-top: 0;
+                margin-bottom: 10px;
+                color: #ffd700;
+                text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            ">
+                Project Leaderboard
+            </h2>
+            <p style="color: #a0aec0; font-size: 16px; margin: 0;">
+                The most upvoted and highly-rated projects across all batches.
+            </p>
+        </header>
+
+        <div class="glass-table-wrapper">
+            <div style="overflow-x: auto;">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px; text-align: center;">Rank</th>
+                            <th>Project Title</th>
+                            <th>Team Name</th>
+                            <th>Batch</th>
+                            <th style="text-align: right;">Total Likes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in projects %}
+                        <tr>
+                            <td style="text-align: center;">
+                                {% if forloop.counter == 1 %}
+                                    <div class="rank-badge rank-1" title="1st Place">🥇</div>
+                                {% elif forloop.counter == 2 %}
+                                    <div class="rank-badge rank-2" title="2nd Place">🥈</div>
+                                {% elif forloop.counter == 3 %}
+                                    <div class="rank-badge rank-3" title="3rd Place">🥉</div>
+                                {% else %}
+                                    <div class="rank-badge rank-other">{{ forloop.counter }}</div>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <a href="{% url 'project_detail' project.id %}" class="project-link">
+                                    {{ project.title }}
+                                </a>
+                            </td>
+
+                            <td style="color: #cbd5e1;">{{ project.team.name }}</td>
+
+                            <td style="color: #a0aec0;">{{ project.batch_year }}</td>
+
+                            <td style="text-align: right;">
+                                <div class="likes-count">
+                                    ❤️ {{ project.likes.count }}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 60px 20px;">
+                                <span style="font-size: 40px; opacity: 0.5; display: block; margin-bottom: 15px;">📭</span>
+                                <h3 style="color: #cbd5e1; margin: 0 0 5px 0; font-size: 20px;">No Projects Ranked Yet</h3>
+                                <p style="color: #64748b; font-size: 15px; margin: 0;">Check back later once the community starts upvoting projects!</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 {% endblock %}
