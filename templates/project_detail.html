@@ -1,54 +1,364 @@
 {% extends "base.html" %}
+
 {% block content %}
 
-<h2>{{ project.title }}</h2>
+<style>
+    .detail-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+        align-items: start;
+    }
 
-<p><b>Team:</b> {{ project.team.name }}</p>
-<p><b>Guide:</b> Prof. {{ project.team.guide.first_name }} {{ project.team.guide.last_name }}</p>
-<h4>Team Members:</h4>
-<ul>
-{% for member in project.team.members.all %}
-    <li>{{ member.first_name }} {{ member.last_name }}</li>
-{% endfor %}
-</ul>
+    @media (max-width: 900px) {
+        .detail-container {
+            grid-template-columns: 1fr;
+        }
+    }
 
-<p>{{ project.abstract }}</p>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 30px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin-bottom: 30px;
+    }
 
-<p><b>Tech Stack:</b> {{ project.tech_stack }}</p>
+    .sidebar-section {
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .sidebar-section:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
 
-<p><b>GitHub:</b>
-<a href="{{ project.github_link }}" target="_blank">View Repo</a>
-</p>
+    .sidebar-title {
+        color: #a0aec0;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        display: block;
+    }
 
-<!-- Screenshots -->
-{% for shot in project.screenshots_list.all %}
-    <img src="{{ shot.image.url }}" width="250">
-{% endfor %}
+    .member-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #e2e8f0;
+        margin-bottom: 10px;
+        font-size: 15px;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
 
-<!-- Video -->
-{% if project.demo_video %}
-<iframe width="400" height="250"
-    src="https://www.youtube.com/embed/{{ project.demo_video|slice:'-11:' }}"
-    frameborder="0" allowfullscreen>
-</iframe>
-{% endif %}
+    .tech-pill {
+        display: inline-block;
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        color: #00d4ff;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: bold;
+        margin-top: 5px;
+    }
 
-<!-- Likes -->
-{% if user.is_authenticated %}
+    /* Buttons */
+    .github-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .github-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: white; transform: translateY(-2px); }
 
-<form method="POST" action="{% url 'like_project' project.id %}">
-    {% csrf_token %}
-    <button type="submit">
-        ❤️ Like ({{ project.likes.count }})
-    </button>
-</form>
+    .like-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: rgba(255, 0, 102, 0.1);
+        border: 1px solid #ff0066;
+        color: #ff0066;
+        padding: 14px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        width: 100%;
+        cursor: pointer;
+    }
+    .like-btn:hover {
+        background: #ff0066;
+        color: white;
+        box-shadow: 0 0 20px rgba(255, 0, 102, 0.4);
+        transform: translateY(-2px);
+    }
 
-{% else %}
+    .like-disabled {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        color: #a0aec0;
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
 
-<p style="color:red;">
-    You need to login to like this project.
-</p>
+    /* Media Gallery & Lightbox */
+    .gallery-thumbnail {
+        width: 160px; height: 110px; object-fit: cover; 
+        border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        cursor: pointer; transition: transform 0.2s, border-color 0.2s;
+    }
+    .gallery-thumbnail:hover {
+        transform: scale(1.05); border-color: #00d4ff;
+    }
 
-{% endif %}
+    .lightbox-overlay {
+        display: none; position: fixed; z-index: 9999;
+        left: 0; top: 0; width: 100%; height: 100%;
+        background-color: rgba(10, 15, 44, 0.95); backdrop-filter: blur(10px);
+        align-items: center; justify-content: center; flex-direction: column;
+    }
+    .lightbox-img {
+        max-width: 90%; max-height: 80vh; border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 212, 255, 0.2); border: 2px solid rgba(255,255,255,0.1);
+    }
+    .lightbox-controls { display: flex; gap: 30px; margin-top: 20px; }
+    .lightbox-btn {
+        background: rgba(0, 212, 255, 0.1); border: 1px solid #00d4ff; color: #00d4ff;
+        width: 50px; height: 50px; border-radius: 50%; font-size: 24px;
+        display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;
+    }
+    .lightbox-btn:hover { background: #00d4ff; color: #0a0f2c; box-shadow: 0 0 15px rgba(0, 212, 255, 0.5); }
+    .close-lightbox { position: absolute; top: 30px; right: 40px; font-size: 40px; color: white; cursor: pointer; transition: color 0.3s; }
+    .close-lightbox:hover { color: #ff00cc; }
+</style>
+
+<div style="
+    min-height: 100vh;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+">
+
+    <div style="max-width: 1200px; margin: auto;">
+
+        <div style="margin-bottom: 30px;">
+            <a href="{% url 'showcase' %}" style="text-decoration: none; color: #cbd5e1; font-weight: 600; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#cbd5e1';">
+                ⬅️ Back to Showcase
+            </a>
+        </div>
+
+        <div class="detail-container">
+            
+            <div>
+                <div class="glass-card">
+                    <h1 style="color: #00d4ff; font-size: 36px; font-weight: 800; margin-top: 0; margin-bottom: 20px; text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);">
+                        {{ project.title }}
+                    </h1>
+                    
+                    <h3 style="color: #fff; font-size: 18px; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+                        Project Abstract
+                    </h3>
+                    <p style="color: #e2e8f0; font-size: 16px; line-height: 1.8; margin: 0; white-space: pre-wrap;">{{ project.abstract }}</p>
+                </div>
+
+                {% if project.demo_video or project.screenshots_list.all %}
+                <div class="glass-card image-gallery">
+                    <h3 style="color: #fff; font-size: 18px; margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+                        Project Media
+                    </h3>
+                    
+                    {% if project.demo_video %}
+                    <div style="margin-bottom: 25px;">
+                        <span class="sidebar-title">Demo Video</span>
+                        <iframe id="demo-iframe-detail" data-raw-url="{{ project.demo_video }}" style="
+                                width: 100%; height: 350px; border-radius: 12px; 
+                                border: 2px solid rgba(0, 212, 255, 0.3); box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+                            "
+                            src="https://www.youtube.com/embed/{{ project.demo_video|slice:'-11:' }}"
+                            frameborder="0" 
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                        
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                const iframe = document.getElementById('demo-iframe-detail');
+                                if (iframe) {
+                                    let rawUrl = iframe.getAttribute('data-raw-url');
+                                    let embedUrl = rawUrl;
+                                    
+                                    // Convert standard watch URL
+                                    if (rawUrl.includes('watch?v=')) {
+                                        embedUrl = rawUrl.replace('watch?v=', 'embed/');
+                                    } 
+                                    // Convert shortened youtu.be URL
+                                    else if (rawUrl.includes('youtu.be/')) {
+                                        embedUrl = rawUrl.replace('youtu.be/', 'youtube.com/embed/');
+                                    }
+                                    
+                                    iframe.src = embedUrl;
+                                }
+                            });
+                        </script>
+                    </div>
+                    {% endif %}
+
+                    {% if project.screenshots_list.all %}
+                    <div>
+                        <span class="sidebar-title">Screenshots (Click to expand)</span>
+                        <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+                            {% for shot in project.screenshots_list.all %}
+                                <img src="{{ shot.image.url }}" class="gallery-thumbnail" onclick="openLightbox(this)">
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <div class="glass-card" style="position: sticky; top: 40px;">
+                    
+                    <div class="sidebar-section">
+                        <span class="sidebar-title">Project Team</span>
+                        <div style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 5px;">
+                            👥 {{ project.team.name }}
+                        </div>
+                        <div style="color: #00ffcc; font-size: 14px; font-weight: 600;">
+                            👨‍🏫 Guide: Prof. {{ project.team.guide.first_name }} {{ project.team.guide.last_name }}
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <span class="sidebar-title">Team Members</span>
+                        <div>
+                            {% for member in project.team.members.all %}
+                                <div class="member-item">
+                                    <span>👤</span> {{ member.first_name }} {{ member.last_name }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <span class="sidebar-title">Technologies Used</span>
+                        <div class="tech-pill">
+                            {{ project.tech_stack|default:"Not specified" }}
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section" style="border-bottom: none; padding-bottom: 0;">
+                        
+                        {% if project.github_link %}
+                        <div style="margin-bottom: 15px;">
+                            <a href="{{ project.github_link }}" target="_blank" class="github-btn">
+                                <svg height="20" viewBox="0 0 16 16" width="20" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                                View Source Code
+                            </a>
+                        </div>
+                        {% endif %}
+
+                        {% if user.is_authenticated %}
+                            <form method="POST" action="{% url 'like_project' project.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="like-btn">
+                                    ❤️ Upvote Project ({{ project.likes.count }})
+                                </button>
+                            </form>
+                        {% else %}
+                            <div class="like-disabled">
+                                <span style="display: block; font-size: 20px; margin-bottom: 5px;">❤️ {{ project.likes.count }}</span>
+                                <a href="{% url 'login' %}" style="color: #00d4ff; text-decoration: none; font-weight: bold;">Log in</a> to upvote this project.
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="lightboxOverlay" class="lightbox-overlay">
+    <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+    <img id="lightboxImage" class="lightbox-img" src="">
+    <div class="lightbox-controls">
+        <button class="lightbox-btn" onclick="prevImage()">&#10094;</button>
+        <button class="lightbox-btn" onclick="nextImage()">&#10095;</button>
+    </div>
+</div>
+
+<script>
+    let currentImageIndex = 0;
+    let currentGalleryArray = [];
+
+    function openLightbox(clickedImg) {
+        const galleryContainer = clickedImg.closest('.image-gallery');
+        const imagesNodeList = galleryContainer.querySelectorAll('.gallery-thumbnail');
+        
+        currentGalleryArray = Array.from(imagesNodeList);
+        currentImageIndex = currentGalleryArray.indexOf(clickedImg);
+        
+        updateLightboxImage();
+        document.getElementById('lightboxOverlay').style.display = 'flex';
+    }
+
+    function updateLightboxImage() {
+        document.getElementById('lightboxImage').src = currentGalleryArray[currentImageIndex].src;
+    }
+
+    function nextImage() {
+        currentImageIndex = (currentImageIndex + 1) % currentGalleryArray.length;
+        updateLightboxImage();
+    }
+
+    function prevImage() {
+        currentImageIndex = (currentImageIndex - 1 + currentGalleryArray.length) % currentGalleryArray.length;
+        updateLightboxImage();
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightboxOverlay').style.display = 'none';
+        document.getElementById('lightboxImage').src = ""; 
+    }
+
+    document.getElementById('lightboxOverlay').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeLightbox();
+        }
+    });
+</script>
 
 {% endblock %}

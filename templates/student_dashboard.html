@@ -36,6 +36,8 @@
     .card-teal:hover { border-color: rgba(0, 255, 204, 0.5); box-shadow: 0 15px 35px rgba(0, 255, 204, 0.15); }
     .card-gold:hover { border-color: rgba(255, 170, 0, 0.5); box-shadow: 0 15px 35px rgba(255, 170, 0, 0.15); }
     .card-blue:hover { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15); }
+    /* New Purple Theme for Showcase */
+    .card-purple:hover { border-color: rgba(168, 85, 247, 0.5); box-shadow: 0 15px 35px rgba(168, 85, 247, 0.15); }
 
     .dash-icon {
         font-size: 36px;
@@ -88,6 +90,9 @@
 
     .btn-blue { background: rgba(59, 130, 246, 0.1); border: 1px solid #3b82f6; color: #3b82f6; }
     .btn-blue:hover { background: #3b82f6; color: #fff; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+
+    .btn-purple { background: rgba(168, 85, 247, 0.1); border: 1px solid #a855f7; color: #a855f7; }
+    .btn-purple:hover { background: #a855f7; color: #fff; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
 
     .logout-btn {
         background: transparent;
@@ -177,9 +182,12 @@
                 <a href="{% url 'my_project' %}" class="dash-btn btn-teal">Upload Workspace</a>
             </div>
 
-            <a href="{% url 'showcase' %}">
-                <button>View Projects</button>
-            </a>
+            <div class="dash-card card-purple">
+                <div class="dash-icon" style="text-shadow: 0 0 15px rgba(168,85,247,0.5);">🌟</div>
+                <h3 class="dash-title">Project Showcase</h3>
+                <p class="dash-desc">Explore the top-rated, successfully evaluated projects built by brilliant student teams across all batches.</p>
+                <a href="{% url 'showcase' %}" class="dash-btn btn-purple">View Gallery</a>
+            </div>
 
         </div>
 
