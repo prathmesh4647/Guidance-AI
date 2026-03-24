@@ -34,6 +34,7 @@
     .card-cyan:hover { border-color: rgba(0, 212, 255, 0.5); box-shadow: 0 15px 35px rgba(0, 212, 255, 0.15); }
     .card-magenta:hover { border-color: rgba(255, 0, 204, 0.5); box-shadow: 0 15px 35px rgba(255, 0, 204, 0.15); }
     .card-gold:hover { border-color: rgba(255, 170, 0, 0.5); box-shadow: 0 15px 35px rgba(255, 170, 0, 0.15); }
+    .card-blue:hover { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 15px 35px rgba(59, 130, 246, 0.15); }
 
     .dash-icon {
         font-size: 36px;
@@ -80,6 +81,9 @@
 
     .btn-gold { background: rgba(255, 170, 0, 0.1); border: 1px solid #ffaa00; color: #ffaa00; }
     .btn-gold:hover { background: #ffaa00; color: #0a0f2c; box-shadow: 0 0 15px rgba(255, 170, 0, 0.4); }
+
+    .btn-blue { background: rgba(59, 130, 246, 0.1); border: 1px solid #3b82f6; color: #3b82f6; }
+    .btn-blue:hover { background: #3b82f6; color: #fff; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
 
     .logout-btn {
         background: transparent;
@@ -146,6 +150,13 @@
                 <h3 class="dash-title">Manage Teams</h3>
                 <p class="dash-desc">Create project groups, assign unassigned students to their respective teams, and manage overall group dynamics.</p>
                 <a href="{% url 'manage_teams' %}" class="dash-btn btn-magenta">Manage Teams</a>
+            </div>
+
+            <div class="dash-card card-blue">
+                <div class="dash-icon" style="text-shadow: 0 0 15px rgba(59,130,246,0.5);">📂</div>
+                <h3 class="dash-title">View & Evaluate Projects</h3>
+                <p class="dash-desc">Access finalized project workspaces, review uploaded source code, and evaluate final project documentation and demo videos.</p>
+                <a href="{% url 'faculty_projects' %}" class="dash-btn btn-blue">Evaluate Projects</a>
             </div>
 
             <div class="dash-card card-gold">

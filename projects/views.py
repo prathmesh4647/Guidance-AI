@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Project, ProjectScreenshot
 # Create your views here.
 
@@ -43,3 +43,64 @@ def my_project(request):
         return redirect("my_project")
 
     return render(request, "my_project.html", {"project": project})
+
+
+
+from django.utils.timezone import now
+
+@login_required
+def evaluate_project(request, project_id):
+
+    if request.user.role != "faculty":
+        return redirect("login")
+
+    project = get_object_or_404(Project, id=project_id)
+
+    # Prevent re-evaluation after approval
+    if project.status == "approved":
+        return render(request, "error.html", {
+            "message": "Project already evaluated and approved."
+        })
+
+    if request.method == "POST":
+
+        project.evaluation_modeling = int(request.POST.get("modeling", 0))
+        project.evaluation_coding = int(request.POST.get("coding", 0))
+        project.evaluation_testing = int(request.POST.get("testing", 0))
+        project.evaluation_understanding = int(request.POST.get("understanding", 0))
+        project.evaluation_contribution = int(request.POST.get("contribution", 0))
+        project.evaluation_teamwork = int(request.POST.get("teamwork", 0))
+        project.evaluation_presentation = int(request.POST.get("presentation", 0))
+        project.evaluation_documentation = int(request.POST.get("documentation", 0))
+
+        # Calculate total
+        project.evaluated_marks = project.calculate_total()
+
+        action = request.POST.get("action")
+
+        if action == "approve":
+            project.status = "approved"
+            project.approved_at = now()
+        else:
+            project.status = "revision"
+
+        project.save()
+
+        return redirect("faculty_projects")
+
+    return render(request, "evaluate_project.html", {
+        "project": project
+    })
+
+@login_required
+def faculty_projects(request):
+
+    if request.user.role != "faculty":
+        return redirect("login")
+
+    # Only show projects of this faculty's teams
+    projects = Project.objects.filter(team__guide=request.user)
+
+    return render(request, "faculty_projects.html", {
+        "projects": projects
+    })
