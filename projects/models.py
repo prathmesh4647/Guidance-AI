@@ -82,6 +82,12 @@ class Project(models.Model):
             self.evaluation_documentation or 0,
     ])
 
+    def get_final_score(self):
+        marks = self.evaluated_marks or 0
+        likes = self.likes.count()
+
+        return (marks * 0.8) + (likes * 0.2)
+
     def clean(self):
         # Ensure selected idea belongs to same team
         if self.final_idea.team != self.team:

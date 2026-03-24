@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>🏆 Project Leaderboard</h2>
+<hr>
+
+<table border="1" cellpadding="10">
+
+<tr>
+<th>Rank</th>
+<th>Project</th>
+<th>Team</th>
+<th>Likes</th>
+<th>Batch</th>
+</tr>
+
+{% for project in projects %}
+
+<tr>
+
+<td>
+    {% if forloop.counter == 1 %}
+        🥇
+    {% elif forloop.counter == 2 %}
+        🥈
+    {% elif forloop.counter == 3 %}
+        🥉
+    {% else %}
+        {{ forloop.counter }}
+    {% endif %}
+</td>
+
+<td>
+    <a href="{% url 'project_detail' project.id %}">
+        {{ project.title }}
+    </a>
+</td>
+
+<td>{{ project.team.name }}</td>
+
+<td>❤️ {{ project.likes.count }}</td>
+
+<td>{{ project.batch_year }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

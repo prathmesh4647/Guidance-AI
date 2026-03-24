@@ -160,3 +160,18 @@ def like_project(request, project_id):
         project.likes.add(request.user)
 
     return redirect("project_detail", project_id=project.id)
+
+
+def leaderboard(request):
+
+    projects = Project.objects.filter(status="approved")
+
+    # Convert to list for sorting
+    projects = list(projects)
+
+    # Sort by final score (descending)
+    projects.sort(key=lambda x: x.get_final_score(), reverse=True)
+
+    return render(request, "leaderboard.html", {
+        "projects": projects
+    })
