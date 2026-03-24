@@ -98,9 +98,65 @@ def faculty_projects(request):
     if request.user.role != "faculty":
         return redirect("login")
 
-    # Only show projects of this faculty's teams
-    projects = Project.objects.filter(team__guide=request.user)
+    projects = Project.objects.filter(
+        team__guide=request.user
+    ).select_related("team").prefetch_related("screenshots_list")
 
-    return render(request, "faculty_projects.html", {
-        "projects": projects
-    })
+    return render(request, "faculty_projects.html", {"projects": projects})
+
+
+def showcase(request):
+
+    projects = Project.objects.filter(
+        status="approved"
+    ).select_related("team", "team__guide").prefetch_related("likes")
+
+    return render(request, "showcase.html", {"projects": projects})
+
+
+def project_detail(request, project_id):
+
+    project = Project.objects.select_related(
+        "team", "team__guide"
+    ).prefetch_related(
+        "team__members",
+        "screenshots_list",
+        "likes"
+    ).get(id=project_id)
+
+    if project.status != "approved":
+        return render(request, "error.html", {
+            "message": "Project not available for public view."
+        })
+
+    return render(request, "project_detail.html", {"project": project})
+
+
+
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+def like_project(request, project_id):
+
+    project = get_object_or_404(Project, id=project_id)
+
+    # HARD BLOCK
+    if not request.user.is_authenticated:
+        return render(request, "error.html", {
+            "message": "You need to login to like a project."
+        })
+
+    # Extra safety (optional but strong)
+    if not isinstance(request.user, User):
+        return render(request, "error.html", {
+            "message": "Invalid user."
+        })
+
+    if request.user in project.likes.all():
+        project.likes.remove(request.user)
+    else:
+        project.likes.add(request.user)
+
+    return redirect("project_detail", project_id=project.id)

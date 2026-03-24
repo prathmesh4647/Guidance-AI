@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Project Showcase</h2>
+<hr>
+
+<div style="display:flex; flex-wrap:wrap; gap:20px;">
+
+{% for project in projects %}
+
+<div style="
+    width:300px;
+    background:white;
+    color:#111;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.2);
+">
+
+    <h3>{{ project.title }}</h3>
+
+    <p><b>Team:</b> {{ project.team.name }}</p>
+
+    <p>
+        {{ project.abstract|truncatewords:12 }}
+    </p>
+
+    <p>❤️ {{ project.likes.count }}</p>
+
+    <p><b>Batch:</b> {{ project.batch_year }}</p>
+
+    <a href="{% url 'project_detail' project.id %}">
+        <button>View Details</button>
+    </a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

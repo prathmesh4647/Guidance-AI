@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from pgvector.django import VectorField
+from django.conf import settings
 
 class Project(models.Model):
 
@@ -38,6 +39,13 @@ class Project(models.Model):
     github_link = models.URLField(null=True, blank=True)
 
     evaluated_marks = models.FloatField(null=True, blank=True)
+    likes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name="liked_projects"
+    )
+
+    batch_year = models.IntegerField(default=2026)
 
     status = models.CharField(
         max_length=10,

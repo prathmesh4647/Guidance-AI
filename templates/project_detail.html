@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>{{ project.title }}</h2>
+
+<p><b>Team:</b> {{ project.team.name }}</p>
+<p><b>Guide:</b> Prof. {{ project.team.guide.first_name }} {{ project.team.guide.last_name }}</p>
+<h4>Team Members:</h4>
+<ul>
+{% for member in project.team.members.all %}
+    <li>{{ member.first_name }} {{ member.last_name }}</li>
+{% endfor %}
+</ul>
+
+<p>{{ project.abstract }}</p>
+
+<p><b>Tech Stack:</b> {{ project.tech_stack }}</p>
+
+<p><b>GitHub:</b>
+<a href="{{ project.github_link }}" target="_blank">View Repo</a>
+</p>
+
+<!-- Screenshots -->
+{% for shot in project.screenshots_list.all %}
+    <img src="{{ shot.image.url }}" width="250">
+{% endfor %}
+
+<!-- Video -->
+{% if project.demo_video %}
+<iframe width="400" height="250"
+    src="https://www.youtube.com/embed/{{ project.demo_video|slice:'-11:' }}"
+    frameborder="0" allowfullscreen>
+</iframe>
+{% endif %}
+
+<!-- Likes -->
+{% if user.is_authenticated %}
+
+<form method="POST" action="{% url 'like_project' project.id %}">
+    {% csrf_token %}
+    <button type="submit">
+        ❤️ Like ({{ project.likes.count }})
+    </button>
+</form>
+
+{% else %}
+
+<p style="color:red;">
+    You need to login to like this project.
+</p>
+
+{% endif %}
+
+{% endblock %}
