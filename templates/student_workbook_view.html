@@ -1,44 +1,223 @@
 {% extends "base.html" %}
+
 {% block content %}
 
-<h2>📘 Workbook - {{ project.title }}</h2>
-<hr>
+<style>
+    .workbook-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    
+    .phase-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-top: 4px solid #00d4ff;
+        border-radius: 16px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        margin-bottom: 40px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .phase-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 50px rgba(0, 212, 255, 0.15);
+        border-color: rgba(0, 212, 255, 0.3);
+    }
 
-{% regroup responses by question.review as review_list %}
+    .phase-title {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 20px 30px;
+        margin: 0;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 700;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-{% for review in review_list %}
+    /* Glass Table Styling */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .glass-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
 
-<h3>{{ review.grouper.title }}</h3>
+    .glass-table th {
+        padding: 15px 30px;
+        background: rgba(255, 255, 255, 0.02);
+        color: #a0aec0;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-<table border="1" cellpadding="10">
-<tr>
-<th>Question</th>
-<th>Status</th>
-<th>Remark</th>
-</tr>
+    .glass-table td {
+        padding: 20px 30px;
+        color: #e2e8f0;
+        font-size: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        vertical-align: top;
+        line-height: 1.6;
+    }
 
-{% for r in review.list %}
+    .glass-table tr {
+        transition: background 0.3s ease;
+    }
+    .glass-table tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+    .glass-table tr:last-child td {
+        border-bottom: none;
+    }
 
-<tr>
-<td>{{ r.question.question_text }}</td>
+    /* Question Formatting */
+    .question-text {
+        font-weight: 500;
+        color: #fff;
+        max-width: 500px;
+    }
 
-<td>
-{% if r.is_completed %}
-✅ Completed
-{% else %}
-⏳ Pending
-{% endif %}
-</td>
+    /* Glowing Status Badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+    }
+    
+    .status-completed {
+        background: rgba(0, 255, 204, 0.15);
+        color: #00ffcc;
+        border: 1px solid rgba(0, 255, 204, 0.3);
+    }
+    
+    .status-pending {
+        background: rgba(255, 170, 0, 0.15);
+        color: #ffaa00;
+        border: 1px solid rgba(255, 170, 0, 0.3);
+    }
 
-<td>{{ r.remark }}</td>
+    .remark-text {
+        color: #cbd5e1;
+        font-size: 14px;
+        font-style: italic;
+    }
+    .remark-empty {
+        color: #64748b;
+        font-size: 14px;
+        font-style: italic;
+    }
+</style>
 
-</tr>
+<div style="
+    min-height: 100vh;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+">
 
-{% endfor %}
-</table>
+    <div style="max-width: 1100px; margin: auto;">
 
-<hr>
+        <div style="margin-bottom: 20px;">
+            <a href="javascript:history.back()" style="text-decoration: none; color: #cbd5e1; font-weight: 600; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#cbd5e1';">
+                ⬅️ Back to Dashboard
+            </a>
+        </div>
 
-{% endfor %}
+        <header class="workbook-header">
+            <div style="width: 70px; height: 70px; background: rgba(0, 212, 255, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 1px solid rgba(0, 212, 255, 0.3); transform: rotate(-5deg);">
+                <span style="font-size: 32px; transform: rotate(5deg);">📘</span>
+            </div>
+            <h2 style="font-size: 32px; font-weight: 800; margin: 0 0 10px 0; color: #fff; text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);">
+                Project Workbook
+            </h2>
+            <p style="color: #00d4ff; font-size: 18px; font-weight: 600; margin: 0;">
+                {{ project.title }}
+            </p>
+            <p style="color: #a0aec0; font-size: 15px; max-width: 600px; margin: 10px auto 0 auto;">
+                Track your Software Development Life Cycle (SDLC) progress and review faculty feedback.
+            </p>
+        </header>
+
+        {% regroup responses|dictsort:"question.id"|dictsort:"question.review.id" by question.review as review_list %}
+
+        <div>
+            {% for review in review_list %}
+            
+            <div class="phase-card">
+                <h3 class="phase-title">
+                    <span style="color: #00d4ff;">📌</span> {{ review.grouper.title }}
+                </h3>
+
+                <div class="table-responsive">
+                    <table class="glass-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50%;">Question / Task</th>
+                                <th style="width: 15%;">Status</th>
+                                <th style="width: 35%;">Faculty Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in review.list %}
+                            <tr>
+                                <td class="question-text">
+                                    {{ r.question.question_text }}
+                                </td>
+                                
+                                <td>
+                                    {% if r.is_completed %}
+                                        <div class="status-badge status-completed">
+                                            ✅ Completed
+                                        </div>
+                                    {% else %}
+                                        <div class="status-badge status-pending">
+                                            ⏳ Pending
+                                        </div>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if r.remark %}
+                                        <div class="remark-text">"{{ r.remark }}"</div>
+                                    {% else %}
+                                        <div class="remark-empty">No remarks provided yet.</div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {% empty %}
+            
+            <div style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px; padding: 60px 20px; text-align: center; backdrop-filter: blur(10px);">
+                <span style="font-size: 40px; opacity: 0.5; display: block; margin-bottom: 15px;">📭</span>
+                <h3 style="color: #cbd5e1; margin: 0 0 10px 0; font-size: 20px;">Workbook Empty</h3>
+                <p style="color: #64748b; font-size: 15px; margin: 0;">There are currently no SDLC tracking questions assigned to this project.</p>
+            </div>
+
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
 
 {% endblock %}

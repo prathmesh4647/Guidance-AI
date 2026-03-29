@@ -1,60 +1,197 @@
 {% extends "base.html" %}
+
 {% block content %}
 
-<h2>📘 Digital Project Workbook</h2>
-<hr>
+<style>
+    .workbook-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
 
-{% if user.role == "faculty" %}
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 30px;
+    }
 
-<h3>Your Projects</h3>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 30px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .glass-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(0, 212, 255, 0.3);
+        box-shadow: 0 15px 40px rgba(0, 212, 255, 0.15);
+    }
 
-<table border="1" cellpadding="10">
-<tr>
-<th>Team</th>
-<th>Project</th>
-<th>Action</th>
-</tr>
+    /* Faculty Card Specifics */
+    .faculty-card { border-top: 4px solid #00d4ff; }
+    .faculty-card:hover { border-color: rgba(0, 212, 255, 0.5); }
 
-{% for p in projects %}
-<tr>
-<td>{{ p.team.name }}</td>
-<td>{{ p.title }}</td>
+    /* Student Card Specifics */
+    .student-card { border-top: 4px solid #ff00cc; }
+    .student-card:hover { border-color: rgba(255, 0, 204, 0.5); box-shadow: 0 15px 40px rgba(255, 0, 204, 0.15); }
 
-<td>
-<a href="{% url 'faculty_review_edit' p.id %}">
-    <button>Open Workbook</button>
-</a>
-</td>
+    .card-title {
+        color: #fff;
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0 0 15px 0;
+        line-height: 1.3;
+    }
 
-</tr>
-{% endfor %}
+    .team-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #cbd5e1;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
 
-</table>
+    .neon-btn {
+        text-align: center;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: auto; /* Pushes button to bottom */
+    }
 
-{% endif %}
+    .btn-cyan {
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid #00d4ff;
+        color: #00d4ff;
+    }
+    .btn-cyan:hover {
+        background: #00d4ff;
+        color: #0a0f2c;
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+    }
 
----
+    .btn-magenta {
+        background: rgba(255, 0, 204, 0.1);
+        border: 1px solid #ff00cc;
+        color: #ff00cc;
+    }
+    .btn-magenta:hover {
+        background: #ff00cc;
+        color: #fff;
+        box-shadow: 0 0 15px rgba(255, 0, 204, 0.4);
+    }
+</style>
 
-{% if user.role == "student" %}
+<div style="
+    min-height: 100vh;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+">
 
-{% for p in projects %}
+    <div style="max-width: 1200px; margin: auto;">
 
-<h3>{{ p.title }}</h3>
+        <header class="workbook-header">
+            <div style="width: 70px; height: 70px; background: rgba(0, 212, 255, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; border: 1px solid rgba(0, 212, 255, 0.3); transform: rotate(-5deg);">
+                <span style="font-size: 32px; transform: rotate(5deg);">📘</span>
+            </div>
+            <h2 style="font-size: 36px; font-weight: 800; margin: 0 0 10px 0; color: #fff; text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);">
+                Digital Project Workbook
+            </h2>
+            <p style="color: #a0aec0; font-size: 16px; max-width: 600px; margin: 0 auto;">
+                Access, track, and manage Software Development Life Cycle (SDLC) documentation.
+            </p>
+        </header>
 
-{% if user.role == "faculty" %}
-<a href="{% url 'faculty_review_edit' p.id %}">
-    <button>Open Workbook</button>
-</a>
 
-{% elif user.role == "student" %}
-<a href="{% url 'student_workbook_view' p.id %}">
-    <button>View Workbook</button>
-</a>
+        {% if user.role == "faculty" %}
+        
+        <div style="margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+            <h3 style="color: #00d4ff; margin: 0; font-size: 24px;">Assigned Team Workbooks</h3>
+        </div>
 
-{% endif %}
+        <div class="projects-grid">
+            {% for p in projects %}
+            <div class="glass-card faculty-card">
+                <div class="team-badge">
+                    👥 Team: <span style="color: #fff;">{{ p.team.name }}</span>
+                </div>
+                
+                <h4 class="card-title">{{ p.title }}</h4>
+                
+                <p style="color: #a0aec0; font-size: 14px; margin-bottom: 25px;">
+                    Review SDLC tracking questions, evaluate responses, and provide faculty feedback.
+                </p>
 
-{% endfor %}
+                <a href="{% url 'faculty_review_edit' p.id %}" class="neon-btn btn-cyan">
+                    ✏️ Open & Evaluate Workbook
+                </a>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px; padding: 60px 20px; text-align: center;">
+                <span style="font-size: 40px; opacity: 0.5; display: block; margin-bottom: 15px;">📭</span>
+                <h3 style="color: #cbd5e1; margin: 0 0 5px 0; font-size: 20px;">No Workbooks Assigned</h3>
+                <p style="color: #64748b; font-size: 15px; margin: 0;">You do not currently have any student teams assigned to you.</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
 
-{% endif %}
+
+        {% if user.role == "student" %}
+        
+        <div style="margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+            <h3 style="color: #ff00cc; margin: 0; font-size: 24px;">My Project Workbook</h3>
+        </div>
+
+        <div class="projects-grid">
+            {% for p in projects %}
+            <div class="glass-card student-card">
+                <div class="team-badge" style="border-color: rgba(255, 0, 204, 0.3); background: rgba(255, 0, 204, 0.05);">
+                    🚀 Your Project
+                </div>
+                
+                <h4 class="card-title">{{ p.title }}</h4>
+                
+                <p style="color: #a0aec0; font-size: 14px; margin-bottom: 25px;">
+                    Track your project's life cycle phases, complete assigned review questions, and view feedback from your guide.
+                </p>
+
+                <a href="{% url 'student_workbook_view' p.id %}" class="neon-btn btn-magenta">
+                    👁️ View Workbook
+                </a>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px; padding: 60px 20px; text-align: center;">
+                <span style="font-size: 40px; opacity: 0.5; display: block; margin-bottom: 15px;">📭</span>
+                <h3 style="color: #cbd5e1; margin: 0 0 5px 0; font-size: 20px;">No Approved Project Yet</h3>
+                <p style="color: #64748b; font-size: 15px; margin: 0;">Your workbook will appear here once your project idea is approved by your guide.</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+</div>
 
 {% endblock %}

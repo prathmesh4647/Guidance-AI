@@ -1,49 +1,309 @@
 {% extends "base.html" %}
+
 {% block content %}
 
-<h2>📋 Workbook - {{ project.team.name }}</h2>
-<hr>
+<style>
+    .workbook-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    /* The Sticky Action Bar */
+    .sticky-action-bar {
+        position: sticky;
+        top: 85px; /* Sits just below your global navbar */
+        z-index: 100;
+        background: rgba(10, 15, 44, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        border-top: 3px solid #00d4ff;
+        padding: 15px 25px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        transition: all 0.3s ease;
+    }
 
-<form method="POST">
-{% csrf_token %}
+    .neon-save-btn {
+        background: linear-gradient(90deg, #00d4ff, #00ffcc);
+        border: none;
+        color: #0a0f2c;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 255, 204, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .neon-save-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 255, 204, 0.5);
+    }
 
-{% regroup responses by question.review as review_list %}
+    /* Phase Card Styling */
+    .phase-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        margin-bottom: 40px;
+        overflow: hidden;
+    }
 
-{% for review in review_list %}
+    .phase-title {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 20px 30px;
+        margin: 0;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 700;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-left: 4px solid #ff00cc;
+    }
 
-<h3>{{ review.grouper.title }}</h3>
+    /* Glass Table Styling */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .glass-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
 
-<table border="1" cellpadding="10">
-<tr>
-<th>Question</th>
-<th>Remark</th>
-<th>Complete</th>
-</tr>
+    .glass-table th {
+        padding: 15px 30px;
+        background: rgba(255, 255, 255, 0.02);
+        color: #a0aec0;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-{% for r in review.list %}
+    .glass-table td {
+        padding: 20px 30px;
+        color: #e2e8f0;
+        font-size: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        vertical-align: top;
+    }
 
-<tr>
-<td>{{ r.question.question_text }}</td>
+    .glass-table tr:last-child td { border-bottom: none; }
 
-<td>
-<textarea name="remark_{{ r.id }}">{{ r.remark }}</textarea>
-</td>
+    /* Custom Textarea */
+    .glass-textarea {
+        width: 100%;
+        min-height: 80px;
+        padding: 12px 15px;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        color: white;
+        font-size: 14px;
+        font-family: inherit;
+        outline: none;
+        resize: vertical;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    .glass-textarea:focus {
+        border-color: #00d4ff;
+        box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+        background: rgba(0, 0, 0, 0.4);
+    }
 
-<td>
-<input type="checkbox" name="complete_{{ r.id }}" {% if r.is_completed %}checked{% endif %}>
-</td>
+    /* Custom Premium Toggle Switch */
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 54px;
+        height: 28px;
+    }
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: rgba(255, 255, 255, 0.1);
+        transition: .4s;
+        border-radius: 34px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        bottom: 3px;
+        background-color: #cbd5e1;
+        transition: .4s;
+        border-radius: 50%;
+    }
+    input:checked + .slider {
+        background-color: rgba(0, 255, 204, 0.2);
+        border-color: #00ffcc;
+    }
+    input:checked + .slider:before {
+        transform: translateX(26px);
+        background-color: #00ffcc;
+        box-shadow: 0 0 10px #00ffcc;
+    }
 
-</tr>
+    .toggle-label-text {
+        display: block;
+        margin-top: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #a0aec0;
+    }
+    input:checked ~ .toggle-label-text {
+        color: #00ffcc;
+    }
+</style>
 
-{% endfor %}
-</table>
+<div style="
+    min-height: 100vh;
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
+    color: white;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+">
 
-<hr>
+    <div style="max-width: 1200px; margin: auto;">
 
-{% endfor %}
+        <div style="margin-bottom: 20px;">
+            <a href="{% url 'workbook_dashboard' %}" style="text-decoration: none; color: #cbd5e1; font-weight: 600; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; transition: all 0.3s ease;">
+                ⬅️ Back to Workbooks
+            </a>
+        </div>
 
-<button type="submit">Save Review</button>
+        <header class="workbook-header">
+            <h2 style="font-size: 32px; font-weight: 800; margin: 0 0 10px 0; color: #fff; text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);">
+                Evaluate Workbook
+            </h2>
+            <p style="color: #00d4ff; font-size: 18px; font-weight: 600; margin: 0;">
+                👥 Team: {{ project.team.name }}
+            </p>
+        </header>
 
-</form>
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="sticky-action-bar">
+                <div>
+                    <h4 style="margin: 0; color: #fff; font-size: 16px;">Unsaved Changes?</h4>
+                    <p style="margin: 0; color: #a0aec0; font-size: 13px;">Make sure to save your feedback before leaving.</p>
+                </div>
+                <button type="submit" class="neon-save-btn">
+                    💾 Save All Reviews
+                </button>
+            </div>
+
+            {% regroup responses|dictsort:"question.id"|dictsort:"question.review.id" by question.review as review_list %}
+
+            <div>
+                {% for review in review_list %}
+                
+                <div class="phase-card">
+                    <h3 class="phase-title">
+                        <span style="color: #ff00cc;">📌</span> {{ review.grouper.title }}
+                    </h3>
+
+                    <div class="table-responsive">
+                        <table class="glass-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 45%;">SDLC Question / Task</th>
+                                    <th style="width: 40%;">Faculty Remarks</th>
+                                    <th style="width: 15%; text-align: center;">Task Completed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for r in review.list %}
+                                <tr>
+                                    <td style="font-weight: 500;">
+                                        {{ r.question.question_text }}
+                                    </td>
+                                    
+                                    <td>
+                                        <textarea name="remark_{{ r.id }}" class="glass-textarea" placeholder="Enter your feedback or guidance here...">{{ r.remark }}</textarea>
+                                    </td>
+
+                                    <td style="text-align: center; vertical-align: middle;">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" name="complete_{{ r.id }}" {% if r.is_completed %}checked{% endif %}>
+                                            <span class="slider"></span>
+                                        </label>
+                                        <span class="toggle-label-text">
+                                            {% if r.is_completed %}Approved{% else %}Pending{% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {% empty %}
+                <div style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px; padding: 60px 20px; text-align: center;">
+                    <span style="font-size: 40px; opacity: 0.5; display: block; margin-bottom: 15px;">📭</span>
+                    <h3 style="color: #cbd5e1; margin: 0 0 10px 0; font-size: 20px;">No Tracking Questions</h3>
+                    <p style="color: #64748b; font-size: 15px; margin: 0;">There are currently no SDLC tracking questions assigned to this workbook.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if review_list %}
+            <div style="text-align: right; margin-top: 20px; padding-bottom: 40px;">
+                <button type="submit" class="neon-save-btn" style="padding: 16px 32px; font-size: 16px;">
+                    💾 Save All Reviews
+                </button>
+            </div>
+            {% endif %}
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggles = document.querySelectorAll('.toggle-switch input');
+        toggles.forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const labelText = this.parentElement.nextElementSibling;
+                if(this.checked) {
+                    labelText.textContent = 'Approved';
+                    labelText.style.color = '#00ffcc';
+                } else {
+                    labelText.textContent = 'Pending';
+                    labelText.style.color = '#a0aec0';
+                }
+            });
+        });
+    });
+</script>
 
 {% endblock %}
