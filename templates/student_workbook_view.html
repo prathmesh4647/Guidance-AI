@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>📘 Workbook - {{ project.title }}</h2>
+<hr>
+
+{% regroup responses by question.review as review_list %}
+
+{% for review in review_list %}
+
+<h3>{{ review.grouper.title }}</h3>
+
+<table border="1" cellpadding="10">
+<tr>
+<th>Question</th>
+<th>Status</th>
+<th>Remark</th>
+</tr>
+
+{% for r in review.list %}
+
+<tr>
+<td>{{ r.question.question_text }}</td>
+
+<td>
+{% if r.is_completed %}
+✅ Completed
+{% else %}
+⏳ Pending
+{% endif %}
+</td>
+
+<td>{{ r.remark }}</td>
+
+</tr>
+
+{% endfor %}
+</table>
+
+<hr>
+
+{% endfor %}
+
+{% endblock %}

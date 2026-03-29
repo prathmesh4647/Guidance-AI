@@ -137,6 +137,9 @@ def idea_generator(request):
 #Functions for approving, rejecting and adding remarks
 from projects.models import Project
 from django.utils.timezone import now
+from workbook.models import ReviewQuestion, ReviewResponse
+
+
 
 @login_required
 def approve_idea(request, idea_id):
@@ -176,8 +179,7 @@ def approve_idea(request, idea_id):
 
         # Prevent duplicate project
         if not hasattr(idea.team, "project"):
-
-            Project.objects.update_or_create(
+            project, created = Project.objects.update_or_create(
             team=idea.team,
             defaults={
                 "final_idea": idea,
@@ -187,7 +189,14 @@ def approve_idea(request, idea_id):
                 }
             )
 
-    return redirect("faculty_ideas")
+            # ONLY RUN WHEN PROJECT IS NEW
+            if created:
+                for q in ReviewQuestion.objects.all():
+                    ReviewResponse.objects.create(
+                        project=project,
+                        question=q
+                    )
+                return redirect("faculty_ideas")
 
 @login_required
 def reject_idea(request, idea_id):

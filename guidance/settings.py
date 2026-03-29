@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'teams',
     'projects',
     'notices',
+    'workbook',
 ]
 
 MIDDLEWARE = [

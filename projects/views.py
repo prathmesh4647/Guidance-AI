@@ -3,8 +3,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Project, ProjectScreenshot
 # Create your views here.
 
-
-
 @login_required
 def my_project(request):
 

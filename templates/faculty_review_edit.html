@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>📋 Workbook - {{ project.team.name }}</h2>
+<hr>
+
+<form method="POST">
+{% csrf_token %}
+
+{% regroup responses by question.review as review_list %}
+
+{% for review in review_list %}
+
+<h3>{{ review.grouper.title }}</h3>
+
+<table border="1" cellpadding="10">
+<tr>
+<th>Question</th>
+<th>Remark</th>
+<th>Complete</th>
+</tr>
+
+{% for r in review.list %}
+
+<tr>
+<td>{{ r.question.question_text }}</td>
+
+<td>
+<textarea name="remark_{{ r.id }}">{{ r.remark }}</textarea>
+</td>
+
+<td>
+<input type="checkbox" name="complete_{{ r.id }}" {% if r.is_completed %}checked{% endif %}>
+</td>
+
+</tr>
+
+{% endfor %}
+</table>
+
+<hr>
+
+{% endfor %}
+
+<button type="submit">Save Review</button>
+
+</form>
+
+{% endblock %}

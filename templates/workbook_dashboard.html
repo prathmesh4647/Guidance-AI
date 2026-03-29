@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>📘 Digital Project Workbook</h2>
+<hr>
+
+{% if user.role == "faculty" %}
+
+<h3>Your Projects</h3>
+
+<table border="1" cellpadding="10">
+<tr>
+<th>Team</th>
+<th>Project</th>
+<th>Action</th>
+</tr>
+
+{% for p in projects %}
+<tr>
+<td>{{ p.team.name }}</td>
+<td>{{ p.title }}</td>
+
+<td>
+<a href="{% url 'faculty_review_edit' p.id %}">
+    <button>Open Workbook</button>
+</a>
+</td>
+
+</tr>
+{% endfor %}
+
+</table>
+
+{% endif %}
+
+---
+
+{% if user.role == "student" %}
+
+{% for p in projects %}
+
+<h3>{{ p.title }}</h3>
+
+{% if user.role == "faculty" %}
+<a href="{% url 'faculty_review_edit' p.id %}">
+    <button>Open Workbook</button>
+</a>
+
+{% elif user.role == "student" %}
+<a href="{% url 'student_workbook_view' p.id %}">
+    <button>View Workbook</button>
+</a>
+
+{% endif %}
+
+{% endfor %}
+
+{% endif %}
+
+{% endblock %}

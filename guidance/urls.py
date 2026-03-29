@@ -33,6 +33,7 @@ urlpatterns = [
     path('teams/', include('teams.urls')),
     path('notices/', include('notices.urls')),
     path("projects/", include("projects.urls")),
+    path("workbook/", include("workbook.urls")),
 ]
 
 if settings.DEBUG:
