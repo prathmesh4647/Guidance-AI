@@ -16,7 +16,6 @@ class Idea(models.Model):
     )
 
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=500, default='')
     abstract = models.TextField()
     ppt = models.FileField(upload_to='idea_ppts/', null=True, blank=True)
 

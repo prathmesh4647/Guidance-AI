@@ -25,7 +25,10 @@ def login_view(request):
             elif user.role == 'faculty':
                 return redirect('faculty_dashboard')
             else:
-                messages.error(request, "Invalid Credentials")
+                messages.error(request, "Your account does not have a valid role assigned.")
+        else:
+            # The error message must go here so it triggers when authentication fails!
+            messages.error(request, "Invalid Username or Password. Please try again.")
 
     return render(request, 'login.html')
 
@@ -113,5 +116,13 @@ def register_student(request):
         return redirect("login")
 
     return render(request, "register.html")
+
+
+
+
+
+
+
+
 
 

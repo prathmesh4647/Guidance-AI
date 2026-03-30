@@ -48,7 +48,6 @@ def submit_idea(request):
 
     if request.method == "POST":
         title = request.POST.get("title")
-        description = request.POST.get("description")
         abstract = request.POST.get("abstract")
         ppt = request.FILES.get('ppt')
 
@@ -75,7 +74,6 @@ def submit_idea(request):
         idea = Idea(
             team=team,
             title=title,
-            description=description,
             abstract=abstract,
             ppt=ppt,
             embedding=embedding,
@@ -251,7 +249,6 @@ def edit_idea(request, idea_id):
     if request.method == "POST":
 
         idea.title = request.POST.get("title")
-        idea.description = request.POST.get("description")
         idea.abstract = request.POST.get("abstract")
 
         # regenerate embedding
@@ -262,7 +259,6 @@ def edit_idea(request, idea_id):
 
         Idea.objects.filter(id=idea.id).update(
             title=idea.title,
-            description=idea.description,
             abstract=idea.abstract,
             embedding=embedding,
             similarity_score=similarity,

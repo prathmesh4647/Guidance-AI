@@ -18,11 +18,26 @@ def generate_embedding(text):
 
 def check_similarity(new_embedding):
     with connection.cursor() as cursor:
+
         cursor.execute("""
-            SELECT MAX(1 - (embedding <=> %s::vector))
-            FROM ideas_idea
-            WHERE embedding IS NOT NULL
-        """, [new_embedding])
+            SELECT MAX(similarity) FROM (
+
+                -- Approved Ideas
+                SELECT 1 - (embedding <=> %s::vector) AS similarity
+                FROM ideas_idea
+                WHERE embedding IS NOT NULL
+                AND status = 'approved'
+
+                UNION ALL
+
+                -- Approved Projects
+                SELECT 1 - (embedding <=> %s::vector) AS similarity
+                FROM projects_project
+                WHERE embedding IS NOT NULL
+                AND status = 'approved'
+
+            ) AS combined;
+        """, [new_embedding, new_embedding])
 
         result = cursor.fetchone()
 

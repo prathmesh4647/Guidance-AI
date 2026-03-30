@@ -4,7 +4,6 @@ from django.db import models
 class projectInfo(models.Model):
     team_name = models.CharField(max_length=100)
     title = models.CharField(max_length=100, default='Unknown')
-    description = models.CharField(max_length=200)
     abstract = models.TextField()
     team_member1 = models.CharField(max_length=100)
     team_member2 = models.CharField(max_length=100)

@@ -10,7 +10,7 @@ class Notice(models.Model):
 
     created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
-    teams = models.ManyToManyField(Team, null=True, blank=True) #Null = all teams
+    teams = models.ManyToManyField(Team, blank=True) #Null = all teams
 
     created_at = models.DateField(auto_now_add=True)
 

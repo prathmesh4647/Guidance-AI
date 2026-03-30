@@ -20,7 +20,7 @@
             padding: 0;
             min-height: 100vh;
             background: linear-gradient(135deg, #0a0f2c, #1a1f4a, #2c1a4a);
-            background-attachment: fixed; /* Keeps the gradient stable when scrolling */
+            background-attachment: fixed;
             color: white;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             overflow-x: hidden;
@@ -62,7 +62,7 @@
             filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
         }
 
-        /* Nav Links */
+        /* Desktop Nav Links */
         .nav-links {
             list-style: none;
             display: flex;
@@ -87,9 +87,7 @@
             text-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
         }
 
-        /* =========================================
-           MODERN DROPDOWN MENU
-           ========================================= */
+        /* Desktop Dropdown Menu */
         .nav-dropdown-menu {
             position: absolute;
             top: 100%;
@@ -105,23 +103,22 @@
             padding: 10px 0;
             min-width: 220px;
             
-            /* Hidden by default with smooth animation */
             opacity: 0;
             visibility: hidden;
             transform: translateY(-15px);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Show dropdown on hover */
-        .nav-dropdown:hover .nav-dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+        /* Show dropdown on hover (Desktop) */
+        @media (min-width: 769px) {
+            .nav-dropdown:hover .nav-dropdown-menu {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
         }
 
-        .nav-dropdown-menu li {
-            padding: 0;
-        }
+        .nav-dropdown-menu li { padding: 0; }
         .nav-dropdown-menu a {
             display: block;
             padding: 12px 25px;
@@ -134,14 +131,88 @@
             background: rgba(0, 212, 255, 0.1);
             color: #00d4ff;
             border-left: 3px solid #00d4ff;
-            padding-left: 30px; /* Cool indentation effect on hover */
+            padding-left: 30px;
         }
 
-        /* Responsive Navbar */
+        /* Mobile Hamburger Button */
+        .mobile-menu-btn {
+            display: none;
+            font-size: 28px;
+            color: white;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+        .mobile-menu-btn:hover { color: #00d4ff; }
+
+        /* =========================================
+           RESPONSIVE MOBILE VIEW
+           ========================================= */
         @media (max-width: 768px) {
             .glass-nav { padding: 15px 20px; }
-            .nav-links { gap: 15px; }
-            .nav-links a { font-size: 14px; }
+            .mobile-menu-btn { display: block; }
+            
+            /* Hide links by default, turn into vertical panel */
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(10, 15, 44, 0.98);
+                backdrop-filter: blur(25px);
+                -webkit-backdrop-filter: blur(25px);
+                flex-direction: column;
+                gap: 0;
+                padding: 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                
+                /* Animation states */
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: all 0.3s ease;
+            }
+
+            /* Shown state triggered by JS */
+            .nav-links.active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .nav-links li { width: 100%; }
+            .nav-links a {
+                display: block;
+                padding: 18px 25px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                font-size: 16px;
+            }
+
+            /* Adjust dropdown specifically for mobile */
+            .nav-dropdown-menu {
+                position: static;
+                background: rgba(0, 0, 0, 0.3);
+                border: none;
+                box-shadow: none;
+                border-radius: 0;
+                margin-top: 0;
+                padding: 0;
+                opacity: 0;
+                visibility: hidden;
+                height: 0;
+                overflow: hidden;
+                transform: none;
+                transition: all 0.3s ease;
+            }
+
+            .nav-dropdown.active .nav-dropdown-menu {
+                opacity: 1;
+                visibility: visible;
+                height: auto;
+                padding: 5px 0;
+            }
         }
     </style>
 </head>
@@ -154,15 +225,17 @@
             Guidance.AI
         </a>
 
+        <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
             <li><a href="{% url 'showcase' %}">Project Showcase</a></li>
             <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
             
             <li class="nav-dropdown">
-                <a href="#" style="display: flex; align-items: center; gap: 5px;">
+                <a href="#" class="dropdown-toggle" style="display: flex; align-items: center; justify-content: space-between;">
                     Login 
-                    <span style="font-size: 10px;">▼</span>
+                    <span style="font-size: 10px; margin-left: 5px;">▼</span>
                 </a>
                 <ul class="nav-dropdown-menu">
                     <li><a href="/accounts">Login Portal</a></li>
@@ -178,6 +251,30 @@
         {% block content %}{% endblock %}
         {% block view %}{% endblock %}
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+            const dropdownToggle = document.querySelector('.dropdown-toggle');
+            const navDropdown = document.querySelector('.nav-dropdown');
+
+            // Toggle Mobile Menu
+            menuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                // Change icon from hamburger to X
+                menuBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+            });
+
+            // Toggle Dropdown on Mobile Tap
+            dropdownToggle.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault(); // Stop page jump on mobile
+                    navDropdown.classList.toggle('active');
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

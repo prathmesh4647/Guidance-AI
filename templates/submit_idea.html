@@ -1,34 +1,259 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="ideaSubmissionSection">
-    <div class="ideaSubmissionheading">
-        <h2>Submit Your Project Idea</h2>
-        <p>
-            Initially you have to submit Three ideas. Only 3 Ideas per team is accepted.
-        </p>
-    </div>
-    <div class="ideaSubmission">
+
+<style>
+    .submit-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 120px);
+        padding: 60px 20px;
+    }
+
+    .glass-form-card {
+        width: 100%;
+        max-width: 750px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-top: 4px solid #00d4ff;
+        padding: 50px 40px;
+        border-radius: 16px;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        position: relative;
+    }
+
+    /* Header Styling */
+    .form-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .icon-box {
+        width: 64px;
+        height: 64px;
+        background: rgba(0, 212, 255, 0.1);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px auto;
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        font-size: 28px;
+    }
+
+    /* Glowing Info Alert */
+    .glass-alert-info {
+        background: rgba(255, 215, 0, 0.05);
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        color: #ffd700;
+        padding: 15px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        margin-bottom: 35px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        line-height: 1.5;
+    }
+
+    /* Input Field Styling */
+    .input-group {
+        margin-bottom: 25px;
+    }
+
+    .input-label {
+        display: block;
+        font-size: 13px;
+        color: #a0aec0;
+        font-weight: 600;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .glass-input, .glass-textarea {
+        width: 100%;
+        padding: 14px 18px;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        color: white;
+        font-size: 15px;
+        outline: none;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+
+    .glass-textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .glass-input:focus, .glass-textarea:focus {
+        border-color: #00d4ff;
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .glass-input::placeholder, .glass-textarea::placeholder {
+        color: #64748b;
+    }
+
+    /* Custom File Upload Dropzone */
+    .file-upload-wrapper {
+        position: relative;
+        width: 100%;
+        margin-bottom: 35px;
+    }
+
+    .file-upload-input {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .file-upload-box {
+        background: rgba(0, 212, 255, 0.02);
+        border: 2px dashed rgba(0, 212, 255, 0.3);
+        border-radius: 12px;
+        padding: 30px 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .file-upload-wrapper:hover .file-upload-box {
+        background: rgba(0, 212, 255, 0.05);
+        border-color: #00d4ff;
+    }
+
+    .file-upload-icon {
+        font-size: 32px;
+        color: #00d4ff;
+    }
+
+    .file-upload-text {
+        color: #cbd5e1;
+        font-size: 15px;
+        font-weight: 500;
+        margin: 0;
+    }
+    
+    .file-name-display {
+        color: #00ffcc;
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 5px;
+        word-break: break-all;
+    }
+
+    /* Submit Button */
+    .neon-submit-btn {
+        background: linear-gradient(90deg, #00d4ff, #00ffcc);
+        border: none;
+        color: #0a0f2c;
+        padding: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 255, 204, 0.3);
+        width: 100%;
+        letter-spacing: 0.5px;
+    }
+
+    .neon-submit-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 255, 204, 0.5);
+    }
+
+    @media (max-width: 600px) {
+        .glass-form-card { padding: 40px 25px; }
+    }
+</style>
+
+<div class="submit-wrapper">
+    <div class="glass-form-card">
         
+        <div style="margin-bottom: 20px;">
+            <a href="javascript:history.back()" style="text-decoration: none; color: #cbd5e1; font-weight: 600; padding: 8px 15px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; transition: all 0.3s ease; font-size: 14px;">
+                ⬅️ Back
+            </a>
+        </div>
+
+        <div class="form-header">
+            <div class="icon-box">💡</div>
+            <h2 style="font-size: 28px; font-weight: 800; margin: 0 0 5px 0; color: #fff;">
+                Submit Project Idea
+            </h2>
+            <p style="color: #a0aec0; font-size: 15px; margin: 0;">Pitch your innovative concept to your faculty guide.</p>
+        </div>
+
+        <div class="glass-alert-info">
+            <span style="font-size: 20px;">⚠️</span>
+            <div>
+                <strong>Submission Rule:</strong> 
+                Initially, your team must submit exactly <strong>Three (3) distinct ideas</strong> for review. Only a maximum of 3 ideas per team is permitted.
+            </div>
+        </div>
+
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             
-            <label for="title">Idea Title</label><br>
-            <input type="text" name="title" required><br><br>
+            <div class="input-group">
+                <label class="input-label" for="title">Idea Title</label>
+                <input type="text" name="title" id="title" class="glass-input" placeholder="e.g. AI-Powered Medical Diagnostics" required>
+            </div>
             
-            <label for="text">Description</label><br>
-            <input type="text" name="description" ><br><br>
+            <div class="input-group">
+                <label class="input-label" for="abstract">Project Abstract</label>
+                <textarea name="abstract" id="abstract" class="glass-textarea" placeholder="Provide a detailed summary of the problem statement, proposed methodology, and expected outcomes..." required></textarea>
+            </div>
         
-            <label for="abstract">Abstract</label><br>
-            <textarea name="abstract" rows="5" required></textarea><br><br>
+            <div class="input-group">
+                <label class="input-label">Upload Presentation (PPT/PPTX)</label>
+                <div class="file-upload-wrapper">
+                    <input type="file" name="ppt" id="ppt" class="file-upload-input" accept=".ppt, .pptx, .pdf">
+                    <div class="file-upload-box">
+                        <div class="file-upload-icon">📁</div>
+                        <p class="file-upload-text">Click to browse or drag and drop your file here</p>
+                        <p class="file-name-display" id="file-name">No file selected</p>
+                    </div>
+                </div>
+            </div>
         
-            <label for="ppt">Upload PPT</label><br>
-            <input type="file" name="ppt"><br><br>
-        
-            <button type="submit">Submit Idea</button>
-        
+            <button type="submit" class="neon-submit-btn">🚀 Submit Idea for Review</button>
         </form>
+
     </div>
-</section>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const fileInput = document.getElementById('ppt');
+        const fileNameDisplay = document.getElementById('file-name');
+
+        fileInput.addEventListener('change', function(e) {
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = "Selected: " + fileInput.files[0].name;
+                fileNameDisplay.style.color = "#00ffcc";
+            } else {
+                fileNameDisplay.textContent = "No file selected";
+                fileNameDisplay.style.color = "#64748b";
+            }
+        });
+    });
+</script>
 
 {% endblock %}
