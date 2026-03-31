@@ -15,6 +15,92 @@
     .doc-link:hover {
         background: rgba(0, 255, 204, 0.2) !important;
     }
+
+    /* =========================================
+       LIGHTBOX MODAL & CAROUSEL STYLES
+       ========================================= */
+    .screenshot-thumb {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .screenshot-thumb:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4) !important;
+        border-color: #00d4ff !important;
+    }
+
+    /* The Modal (background) */
+    .lightbox-modal {
+        display: none; 
+        position: fixed; 
+        z-index: 10000; 
+        padding-top: 60px; 
+        left: 0;
+        top: 0;
+        width: 100%; 
+        height: 100%; 
+        background-color: rgba(10, 15, 44, 0.95); 
+        backdrop-filter: blur(15px); 
+    }
+
+    /* Modal Content (Image) */
+    .lightbox-content {
+        margin: auto;
+        display: block;
+        max-width: 85%;
+        max-height: 80vh;
+        border-radius: 12px;
+        box-shadow: 0 0 40px rgba(0, 212, 255, 0.6);
+        border: 2px solid rgba(0, 212, 255, 0.3);
+        transition: opacity 0.2s ease; /* Smooth fade when switching images */
+        animation: zoomIn 0.3s ease;
+    }
+
+    @keyframes zoomIn {
+        from {transform:scale(0.9); opacity:0}
+        to {transform:scale(1); opacity:1}
+    }
+
+    /* Close & Navigation Buttons */
+    .lightbox-close {
+        position: absolute;
+        top: 30px;
+        right: 40px;
+        color: #cbd5e1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+        cursor: pointer;
+        z-index: 10001;
+    }
+
+    .lightbox-prev, .lightbox-next {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        width: auto;
+        padding: 20px;
+        margin-top: -50px;
+        color: #cbd5e1;
+        font-weight: bold;
+        font-size: 40px;
+        transition: 0.3s ease;
+        border-radius: 8px;
+        user-select: none;
+        -webkit-user-select: none;
+        z-index: 10001;
+    }
+
+    .lightbox-next { right: 30px; }
+    .lightbox-prev { left: 30px; }
+
+    .lightbox-close:hover, .lightbox-prev:hover, .lightbox-next:hover {
+        color: #00d4ff;
+        text-shadow: 0 0 15px rgba(0, 212, 255, 0.8);
+        background: rgba(0, 212, 255, 0.1);
+        text-decoration: none;
+    }
 </style>
 
 <div style="
@@ -125,10 +211,10 @@
             <h4 style="color: #fff; margin-top: 0; font-size: 20px; margin-bottom: 20px;">Project Assets</h4>
 
             {% if project.screenshots_list.all %}
-                <h5 style="color: #a0aec0; margin-bottom: 10px; font-size: 15px;">Screenshots:</h5>
+                <h5 style="color: #a0aec0; margin-bottom: 10px; font-size: 15px;">Screenshots (Click to view gallery):</h5>
                 <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;">
                 {% for shot in project.screenshots_list.all %}
-                    <img src="{{ shot.image.url }}" style="
+                    <img src="{{ shot.image.url }}" class="screenshot-thumb" alt="Project Screenshot" style="
                         width: 200px; height: 120px; object-fit: cover; border-radius: 8px; 
                         border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.3);
                     ">
@@ -149,27 +235,6 @@
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen>
                     </iframe>
-                    
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                            const iframe = document.getElementById('demo-iframe');
-                            if (iframe) {
-                                let rawUrl = iframe.getAttribute('data-raw-url');
-                                let embedUrl = rawUrl;
-                                
-                                // Convert standard watch URL
-                                if (rawUrl.includes('watch?v=')) {
-                                    embedUrl = rawUrl.replace('watch?v=', 'embed/');
-                                } 
-                                // Convert shortened youtu.be URL
-                                else if (rawUrl.includes('youtu.be/')) {
-                                    embedUrl = rawUrl.replace('youtu.be/', 'youtube.com/embed/');
-                                }
-                                
-                                iframe.src = embedUrl;
-                            }
-                        });
-                    </script>
                 </div>
             {% endif %}
 
@@ -188,5 +253,14 @@
 
     </div>
 </div>
+
+<div id="lightboxModal" class="lightbox-modal">
+    <span class="lightbox-close" title="Close">&times;</span>
+    <span class="lightbox-prev" title="Previous">&#10094;</span>
+    <span class="lightbox-next" title="Next">&#10095;</span>
+    <img class="lightbox-content" id="lightboxImage">
+</div>
+
+
 
 {% endblock %}

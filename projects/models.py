@@ -64,7 +64,6 @@ class Project(models.Model):
     evaluation_coding = models.IntegerField(null=True, blank=True)
     evaluation_testing = models.IntegerField(null=True, blank=True)
     evaluation_understanding = models.IntegerField(null=True, blank=True)
-    evaluation_contribution = models.IntegerField(null=True, blank=True)
     evaluation_teamwork = models.IntegerField(null=True, blank=True)
     evaluation_presentation = models.IntegerField(null=True, blank=True)
     evaluation_documentation = models.IntegerField(null=True, blank=True)
@@ -76,7 +75,6 @@ class Project(models.Model):
             self.evaluation_coding or 0,
             self.evaluation_testing or 0,
             self.evaluation_understanding or 0,
-            self.evaluation_contribution or 0,
             self.evaluation_teamwork or 0,
             self.evaluation_presentation or 0,
             self.evaluation_documentation or 0,
