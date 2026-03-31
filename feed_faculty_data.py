@@ -1,3 +1,13 @@
+import os
+import django
+
+# 1. Tell Python where your settings file is
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'guidance.settings')
+
+# 2. Initialize Django
+django.setup()
+
+# 3. NOW we can import models
 from django.contrib.auth import get_user_model
 
 # Automatically grabs your CustomUser model
