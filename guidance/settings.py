@@ -156,3 +156,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+# Tell Django to trust the requests coming from your live domains
+CSRF_TRUSTED_ORIGINS = [
+    'https://guidanceai.me',
+    'https://www.guidanceai.me',
+]
+
+# Tell Django that Nginx is handling the HTTPS securely
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
