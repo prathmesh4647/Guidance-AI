@@ -1,8 +1,21 @@
+import os
+import django
+import sys
+
+# 1. Add the parent directory to Python's path so it can find your apps
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# 2. Point to your settings file
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'guidance.settings')
+
+# 3. Boot up Django
+django.setup()
+
 from workbook.models import Review, ReviewQuestion
 
 def seed():
 
-    r1 = Review.objects.create(title="Project Review-I", semester=1, description="Problem Statement, Motivation, objectives and Literature Review")
+    r1 = Review.objects.create(title="SEM-1 Project Review-I", semester=1, description="Problem Statement, Motivation, objectives and Literature Review")
 
     questions = [
         "Does the statement gives clear identification about what your project will accomplish?",
@@ -26,7 +39,7 @@ def seed():
 
 
 
-    r2 = Review.objects.create(title="Project Review-II", semester=1, description="Feasibility and Scope")
+    r2 = Review.objects.create(title="SEM-1 Project Review-II", semester=1, description="Feasibility and Scope")
 
     questions = [
         "Is the project’s view point is understood?",			
@@ -52,7 +65,7 @@ def seed():
 
 
 
-    r3 = Review.objects.create(title="Project Review-III", semester=1, description="Requirement Analysis & Design")
+    r3 = Review.objects.create(title="SEM-1 Project Review-III", semester=1, description="Requirement Analysis & Design")
 
     questions = [
         "Is information domain analysis complete, consistent and accurate?",
@@ -91,7 +104,7 @@ def seed():
 
 
 
-    r4 = Review.objects.create(title="Project Review-I", semester=2, description="Modeling (Model Refinement and Algorithm development)")
+    r4 = Review.objects.create(title="SEM-2 Project Review-I", semester=2, description="Modeling (Model Refinement and Algorithm development)")
 
     questions = [
         "Which software Development Process model is used? (Water fall, Incremental, RAD) How?(? at this level?)",
@@ -122,7 +135,7 @@ def seed():
 
 
 
-    r5 = Review.objects.create(title="Project Review-II", semester=2, description="Coding / Implementation")
+    r5 = Review.objects.create(title="SEM-2 Project Review-II", semester=2, description="Coding / Implementation")
 
     questions = [
         "Does the code completely and correctly implement the design?",
@@ -152,7 +165,7 @@ def seed():
 
 
 
-    r6 = Review.objects.create(title="Project Review-III", semester=2, description="Validation and Testing")
+    r6 = Review.objects.create(title="SEM-2 Project Review-III", semester=2, description="Validation and Testing")
 
     questions = [
         "Have you done alpha testing?",
@@ -177,7 +190,7 @@ def seed():
 
 
 
-    r7 = Review.objects.create(title="Project Review-IV", semester=2, description="Report Writing")
+    r7 = Review.objects.create(title="SEM-2 Project Review-IV", semester=2, description="Report Writing")
 
     questions = [
         "Is the report written as per the prescribed format?",
@@ -195,3 +208,6 @@ def seed():
         ReviewQuestion.objects.create(review=r7, question_text=q)
 
     print("Data inserted successfully!")
+
+if __name__ == "__main__":
+    seed()
