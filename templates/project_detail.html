@@ -92,6 +92,31 @@
     }
     .github-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: white; transform: translateY(-2px); }
 
+    /* New PPT Download Button Styling */
+    .doc-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: rgba(0, 255, 204, 0.1);
+        border: 1px solid #00ffcc;
+        color: #00ffcc;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .doc-btn:hover {
+        background: #00ffcc;
+        color: #0a0f2c;
+        box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+        transform: translateY(-2px);
+    }
+
     .like-btn {
         display: flex;
         align-items: center;
@@ -287,6 +312,16 @@
                             </a>
                         </div>
                         {% endif %}
+
+                        
+                        {% if project.documentation %}
+                        <div style="margin-bottom: 15px;">
+                            <a href="{{ project.documentation.url }}" target="_blank" class="doc-btn">
+                                📄 View / Download PPT
+                            </a>
+                        </div>
+                        {% endif %}
+
 
                         {% if user.is_authenticated %}
                             <form method="POST" action="{% url 'like_project' project.id %}">
