@@ -17,6 +17,7 @@ def my_project(request):
         project.tech_stack = request.POST.get("tech_stack")
         project.github_link = request.POST.get("github_link")
         project.demo_video = request.POST.get("demo_video")
+        project.documentation = request.FILES.get("documentation")
 
         project.save()
 
