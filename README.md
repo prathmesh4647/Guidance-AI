@@ -64,7 +64,7 @@ It helps students generate innovative ideas, prevents plagiarism using semantic 
 | Frontend       | HTML, CSS, JavaScript |
 | Database       | PostgreSQL |
 | Vector Search  | pgvector |
-| AI/NLP         | Sentence Transformers (PyTorch-based) |
+| AI/NLP         | Sentence Transformers |
 | AI API         | Google Gemini |
 | Deployment     | Docker, Nginx |
 | Testing        | Locust |
